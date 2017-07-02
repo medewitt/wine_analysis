@@ -4,6 +4,10 @@ Welcome to the Wine analysis. This will be used to assess the Red Wine data set 
 
 I have built this project structure using ProjectTemplate which is a handy way of organizing projects and preloading data.
 
+## A reminder of the project requirements
+You will first divide the data randomly into two sets, a training set that you will use to fit your
+models and a test set that will be used to evaluate the methods. Your group should use both regression and classification methods on the data. For the classification methods, you should collapse the ratings into a smaller number of levels, such as low/medium/high, or low/high. If relevant, you can also examine potential unsupervised methods. Your group report should be between 7-10 pages long: describing the data, your methods of analysis, any relevant comparisons between the methods, your findings, and any issues that came up. You should include any plots, graphs, or tables that support your statements, but these should be referenced in the text, and placed at the relevant locations. You may include a separate appendix with relevant R-code that you may deem necessary.
+
 ## Project Template Details
 
 To load your new project, you'll first need to `setwd()` into the directory
