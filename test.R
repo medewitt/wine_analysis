@@ -1,1 +1,2 @@
-test<-seq(1:100)
+library(ProjectTemplate)
+load.project()
