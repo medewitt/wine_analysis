@@ -1,16 +1,10 @@
 # Wine
 
-Welcome to ProjectTemplate!
+Welcome to the Wine analysis. This will be used to assess the Red Wine data set from UCI to comply with the requirements of ST563 at NC State.
 
-This file introduces you to ProjectTemplate, but you should eventually replace
-the contents of this file with an introduction to your project. People who
-work with your data in the future will thank you for it, including your future
-self.
+I have built this project structure using ProjectTemplate which is a handy way of organizing projects and preloading data.
 
-ProjectTemplate is an R package that helps you organize your statistical
-analysis projects. Since you're reading this file, we'll assume that you've
-already called `create.project()` to set up this project and all of its
-contents.
+## Project Template Details
 
 To load your new project, you'll first need to `setwd()` into the directory
 where this README file is located. Then you need to run the following two
