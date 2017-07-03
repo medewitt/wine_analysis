@@ -2,13 +2,15 @@
 
 #classification settings
 poor_threshold <- 4
-good_threshold <- 8
+good_threshold <- 7
 
 #This script creates the new levels and factors in a new data set
 
 red_wine_data_factors<- red_wine_data %>% 
-  mutate(classification = if_else(quality <= poor_threshold, "poor", 
-                                  ifelse(quality >= good_threshold, "good", "medium")))
+  mutate(classification = case_when (quality <= poor_threshold ~ "poor", 
+                                  quality >= good_threshold ~ "good", 
+                                  TRUE ~"medium"))
+table(red_wine_data_factors$classification)
 
 red_wine_data_factors <- red_wine_data_factors %>% 
   mutate(classification = as.factor(classification))
