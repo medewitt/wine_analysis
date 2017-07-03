@@ -54,3 +54,15 @@ red_wine_data_factors %>%
   )+
   xlab("Total Residual Sugar")
 
+##No clearly present outliers
+ggplot(red_wine_data_factors, aes(x=quality))+
+  geom_point(aes(y=residual_sugar))
+
+ggplot(red_wine_data_factors, aes(x=quality))+
+  geom_point(aes(y=free_sulfur_dioxide))
+
+#There are two wines that have very high sulfur dioxide content and have a 7 rating. This could 
+#pull our model the wrong direction, at least for regression if we use total sulfur as a predictor.
+
+ggplot(red_wine_data_factors, aes(x=quality))+
+  geom_point(aes(y=total_sulfur_dioxide))
