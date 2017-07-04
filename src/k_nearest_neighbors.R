@@ -47,3 +47,4 @@ ggplot(knn_classification, aes(k_nearest, V1))+
   geom_point(position = "jitter")+
   xlab("Number of Nearest Neighbors Used")+
   ylab("Classification Rate (correct classifications)")
+
