@@ -46,5 +46,34 @@ knn_classification<-as_tibble(knn_classification) %>%
 ggplot(knn_classification, aes(k_nearest, V1))+
   geom_point(position = "jitter")+
   xlab("Number of Nearest Neighbors Used")+
-  ylab("Classification Rate (correct classifications)")
+  ylab("Classification Rate (correct classifications)")+
+  labs(
+    title = "Classification Rate, Unscaled, Raw Values"
+  )
 
+##################################################################################################
+#Normalize the data due to differences in scales
+##################################################################################################
+
+#Now lets turn it into a function and understand the trends
+red_wine_data_testing_scale<-scale(red_wine_data_testing[,-13])
+red_wine_data_training_scale<-scale(red_wine_data_training[,-13])
+
+knn_classification<-c()
+for (i in 1:100){
+  knn_value <-knn(train = red_wine_data_training_scale, test = red_wine_data_testing_scale, 
+                  cl = red_wine_data_training$classification, k = i)
+  knn_classification<- rbind(knn_classification,
+                             sum(red_wine_data_testing$classification==knn_value)/dim(red_wine_data_testing)[1])
+}
+
+#Turn to tibble and add more information
+knn_classification_scale<-as_tibble(knn_classification) %>% 
+  mutate(k_nearest = 1:100)
+
+#Plot the pretty plot
+ggplot(knn_classification_scale, aes(k_nearest, V1))+
+  geom_point(position = "jitter")+
+  xlab("Number of Nearest Neighbors Used")+
+  ylab("Classification Rate (correct classifications)")+
+  labs(title = "Normalized, Scaled Values")
