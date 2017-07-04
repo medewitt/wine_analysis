@@ -1,4 +1,4 @@
-#Purpose: K nearest neighbors
+#Purpose: K nearest neighbors, 
 
 library(class)
 
