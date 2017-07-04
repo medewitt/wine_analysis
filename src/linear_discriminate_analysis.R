@@ -34,4 +34,4 @@ head(pred_lda_model$posterior,3)
 
 #Look at the confusion matrix
 
-table(pred_lda_model$class, red_wine_data_testing$classification)
+(lda_table <-table(pred_lda_model$class, red_wine_data_testing$classification))
