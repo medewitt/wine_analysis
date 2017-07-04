@@ -8,3 +8,11 @@ if(!require(ProjectTemplate)){
   
 load.project()
 
+
+#Run all of the analysis
+(filenames <- list.files("src", pattern="*.R", full.names=TRUE))
+
+for( file in 2:length(filenames)){
+  source(filenames[file()])
+}
+
