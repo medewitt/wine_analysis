@@ -2,7 +2,7 @@
 #     This will load Project template. It will run all scripts in the data and munge folders.
 
 if(!require(ProjectTemplate)){
-  install.packages("somepackage")
+  install.packages("ProjectTemplate")
   library(ProjectTemplate)
 }
   
