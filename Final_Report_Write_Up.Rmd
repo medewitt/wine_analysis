@@ -7,14 +7,18 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-if(!require(ProjectTemplate)){
-  install.packages("somepackage")
-  library(ProjectTemplate)
-}
+library(ProjectTemplate)
 load.project()
+
+(filenames <- list.files("src", pattern="*.R", full.names=TRUE))
+
+for( a in 1:length(filenames)){
+  on.exit(filenames[a])
+  source(paste0(filenames[a]))
+}
 ```
 
-## R Markdown
+## Introduction
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
@@ -24,7 +28,9 @@ When you click the **Knit** button a document will be generated that includes bo
 summary(cars)
 ```
 
-## Including Plots
+## Description of Data
+
+## Method
 
 You can also embed plots, for example:
 
