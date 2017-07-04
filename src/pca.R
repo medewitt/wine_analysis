@@ -2,7 +2,7 @@
 #         see if we can reduce the dimensionality in the dataset
 
 pca_red_wine<- red_wine_data %>%
-  select(-quality) %>% 
+  dplyr::select(-quality) %>% 
   as.data.frame() %>% 
   na.omit()
 
