@@ -1,5 +1,5 @@
 #Purpose: multi-linear regression
-
+library(boot)
 #Create the full linear model
 (full_lm_model <- lm(as.numeric(red_wine_data_training$quality)~., data = red_wine_data_training))
 
@@ -33,3 +33,20 @@ pred_vs_actual <-as.data.frame(cbind(lm_predict,red_wine_data_testing$quality))
 pred_vs_actual$residual_squared <- (pred_vs_actual[,1]-pred_vs_actual[,2])^2
 
 (test_rse <- sum(pred_vs_actual$residual_squared)/dim(pred_vs_actual)[1])
+
+##K Folds Cross Validation
+cv_error<-c()
+for(i in 1:10){
+  lm_fit_cv <- glm(quality ~ volatile_acidity + chlorides + free_sulfur_dioxide 
+                + total_sulfur_dioxide, data = red_wine_data)
+  cv_error[i] <- cv.glm( red_wine_data, lm_fit_cv, K= 10)$delta[1]
+}
+
+#Bootstrap
+boot_lm <- function (data, index){
+  return(coef(lm(quality ~ volatile_acidity + chlorides + free_sulfur_dioxide + total_sulfur_dioxide,
+              data = data, subset = index)))
+}
+boot_lm(red_wine_data, sample(100, 100, replace = T))
+
+boot(red_wine_data, boot_lm, 1000)
