@@ -63,7 +63,7 @@ predict.regsubsets <- function (object, newdata, id, ...){
   mat[,xvars]%*%coefi
 }
 
-k <- 10
+k <- 5
 folds <- sample (1:k, nrow(red_wine_data), replace = TRUE)
 cv_error <- matrix(NA, k, 11, dimnames = list(NULL, paste(1:11)))
 
