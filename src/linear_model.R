@@ -14,28 +14,6 @@ summary(step_model)
 
 step_model$anova
 
-par(mfrow = c(2,2))
-plot(step_model)
-par(mfrow = c(1,1))
-
-#Now a reduced model
-
-lm_fit <- lm(quality ~ volatile_acidity + chlorides + free_sulfur_dioxide + total_sulfur_dioxide,
-             data = red_wine_data_training)
-
-(train_rse <-summary(lm_fit)$sigma)
-
-par(mfrow = c(2,2))
-plot(lm_fit)
-par(mfrow = c(1,1))
-
-lm_predict <- predict(lm_fit, newdata = red_wine_data_testing)
-
-pred_vs_actual <-as.data.frame(cbind(lm_predict,red_wine_data_testing$quality))
-pred_vs_actual$residual_squared <- (pred_vs_actual[,1]-pred_vs_actual[,2])^2
-
-(test_rse <- sum(pred_vs_actual$residual_squared)/dim(pred_vs_actual)[1])
-
 ##K Folds Cross Validation
 cv_error<-c()
 for(i in 1:10){
@@ -77,8 +55,11 @@ for (j in 1:k){
 }
 
 (mean_cv_errors <- apply(cv_error, 2, mean))
-plot(mean_cv_errors, type = 'b')
+plot(mean_cv_errors, type = 'b', main = "Best Model Selection", xlab = "# Parameters Considered",
+     ylab = "MSE")
 which.min(mean_cv_errors)
 
 reg_best <- regsubsets(quality ~., data = red_wine_data, nvmax = 7)
 coef(reg_best, 7)
+
+###Now fit model on data to see the testing error
