@@ -2,7 +2,7 @@ summary(red_wine_data_factors)
 
 library(reshape2)
 
-red_wine_data_factors %>% 
+as.data.frame(red_wine_data)%>% 
   melt() %>% 
   ggplot(aes(x= variable, y = value))+
   geom_boxplot()+
@@ -13,13 +13,13 @@ red_wine_data_factors %>%
 red_wine_data_index <-red_wine_data%>% 
   mutate(id = seq.int(nrow(red_wine_data)))
 
-red_wine_data_index %>% 
+as.data.frame(red_wine_data_index) %>% 
   melt(id.vars = "id") %>% 
   ggplot(aes(value))+facet_wrap(~variable, scales = "free_x")+geom_histogram()+
   geom_histogram(binwidth = function(x) 2 * IQR(x) / (length(x)^(1/3)))
 
 #Review the histogram for the total sulfur dioxide
-red_wine_data_factors %>% 
+as.data.frame(red_wine_data_factors) %>% 
   melt() %>%
   filter(variable == "total_sulfur_dioxide") %>% 
   ggplot(aes( value))+
@@ -31,7 +31,7 @@ red_wine_data_factors %>%
   xlab("Total Sulfur Dioxide")
 
 # Review the histogram for the free sugar
-red_wine_data_factors %>% 
+as.data.frame(red_wine_data_factors) %>% 
   melt() %>%
   filter(variable == "free_sulfur_dioxide") %>% 
   ggplot(aes( value))+
@@ -43,7 +43,7 @@ red_wine_data_factors %>%
   xlab("Free Sulfur Dioxide")
 
 #Review the histogram for the residual sugar
-red_wine_data_factors %>% 
+as.data.frame(red_wine_data_factors) %>% 
   melt() %>%
   filter(variable == "residual_sugar") %>% 
   ggplot(aes( value))+
