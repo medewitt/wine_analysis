@@ -15,21 +15,21 @@ summary(step_model)
 step_model$anova
 
 ##K Folds Cross Validation
-cv_error<-c()
-for(i in 1:10){
-  lm_fit_cv <- glm(quality ~ volatile_acidity + chlorides + free_sulfur_dioxide 
-                + total_sulfur_dioxide, data = red_wine_data)
-  cv_error[i] <- cv.glm( red_wine_data, lm_fit_cv, K= 10)$delta[1]
-}
+# cv_error<-c()
+# for(i in 1:10){
+#   lm_fit_cv <- glm(quality ~ volatile_acidity + chlorides + free_sulfur_dioxide 
+#                 + total_sulfur_dioxide, data = red_wine_data)
+#   cv_error[i] <- cv.glm( red_wine_data, lm_fit_cv, K= 10)$delta[1]
+# }
 
 #Bootstrap
-boot_lm <- function (data, index){
-  return(coef(lm(quality ~ volatile_acidity + chlorides + free_sulfur_dioxide + total_sulfur_dioxide,
-              data = data, subset = index)))
-}
-boot_lm(red_wine_data, sample(100, 100, replace = T))
-
-boot(red_wine_data, boot_lm, 1000)
+# boot_lm <- function (data, index){
+#   return(coef(lm(quality ~ volatile_acidity + chlorides + free_sulfur_dioxide + total_sulfur_dioxide,
+#               data = data, subset = index)))
+# }
+# boot_lm(red_wine_data, sample(100, 100, replace = T))
+# 
+# boot(red_wine_data, boot_lm, 1000)
 
 #Feature selection using model selection and cv
 
@@ -61,5 +61,26 @@ which.min(mean_cv_errors)
 
 reg_best <- regsubsets(quality ~., data = red_wine_data, nvmax = 7)
 coef(reg_best, 7)
+
+variables_to_consider <- names (coef(reg_best,7))[-1]
+
+variables_paste <- paste("quality", "~", paste(variables_to_consider, 
+                                                      collapse = "+"))
+summary(reg_best)
+variables_paste
+
+#Run boostrap
+
+boot_lm <- function (data, index){
+  return(coef(lm(quality ~ volatile_acidity+chlorides+free_sulfur_dioxide+
+                   total_sulfur_dioxide+pH+sulphates+alcohol,
+                 data = data, subset = index)))
+}
+
+boot_lm(red_wine_data, sample(1000, 1000, replace = T))
+
+(lm_boot_output <- boot(red_wine_data, boot_lm, 1000))
+
+plot(lm_boot_output, index = 4)
 
 ###Now fit model on data to see the testing error

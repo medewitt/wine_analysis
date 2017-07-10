@@ -1,4 +1,5 @@
-# Example Data Diagnostics Script
+# Verify that the data imported correctly
+library(testthat)
 
-data <- rnorm(100000, 0, 1)
-expect_that(length(data) == 100000, is_true())
+stopifnot(expect_that(dim(red_wine_data)[1] == 1599, is_true()) &&
+          expect_that(dim(red_wine_data)[2] == 12, is_true()))

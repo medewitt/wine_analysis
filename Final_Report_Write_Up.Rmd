@@ -1,7 +1,7 @@
 ---
 title: "Final Report for Red Wine Analysis"
-author: "Michael DeWitt"
-date: "7/3/2017"
+author: "Ruiqiang Chen, Michael DeWitt, David Williams, Alex Vannoy"
+date: "7/28/2017"
 output: pdf_document
 ---
 
@@ -20,17 +20,23 @@ for( a in 1:length(filenames)){
 
 ## Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
+The purpose of this document is to report the proposed statistical models for classification of red wine. 
 
 ## Description of Data
+The data set provided is the Wine dataset from UC Irvine. It consists of `r nrow(red_wine_data) ` with a total of `r ncol(red_wine_data) ` predictors. These predictors include the following `r names(red_wine_data)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vinter is interested in judging the wine's quality through objective means rather than todays subjective method of averaging the 1-10 point judgment of tastetesters.
 
 ## Method
+
+###Regression
+
+###Classification
+
+###Comparison of Models
+
+##Discussion
+
+##Conclusion
+##Issues
 
 You can also embed plots, for example:
 
