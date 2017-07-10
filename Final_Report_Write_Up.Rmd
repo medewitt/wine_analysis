@@ -23,7 +23,31 @@ for( a in 1:length(filenames)){
 The purpose of this document is to report the proposed statistical models for classification of red wine. 
 
 ## Description of Data
-The data set provided is the Wine dataset from UC Irvine. It consists of `r nrow(red_wine_data) ` with a total of `r ncol(red_wine_data) ` predictors. These predictors include the following `r names(red_wine_data)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vinter is interested in judging the wine's quality through objective means rather than todays subjective method of averaging the 1-10 point judgment of tastetesters.
+The data set provided is the Wine dataset from UC Irvine. It consists of `r nrow(red_wine_data) ` with a total of `r ncol(red_wine_data) ` predictors. These predictors include the following `r names(red_wine_data)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vinter is interested in judging the wine's quality through objective means rather than todays subjective method of averaging the 1-10 point judgment of tastetesters. The distribution of these different criteria can be seen below:
+```{r echo=FALSE, warning=FALSE}
+red_wine_data_index <-red_wine_data%>% 
+  mutate(id = seq.int(nrow(red_wine_data)))
+as.data.frame(red_wine_data_index) %>% 
+  melt(id.vars = "id") %>% 
+  ggplot(aes(value))+facet_wrap(~variable, scales = "free_x")+geom_histogram()+
+  geom_histogram(binwidth = function(x) 2 * IQR(x) / (length(x)^(1/3)))
+```
+
+
+Reviewing the individual components there appears to be a slight irregularity with total free sulfur dioxide. This can be seen in the histogram of this variable.
+```{r echo=FALSE}
+as.data.frame(red_wine_data_factors) %>% 
+  melt() %>%
+  filter(variable == "free_sulfur_dioxide") %>% 
+  ggplot(aes( value))+
+  geom_histogram(bins = 30)+
+  labs(
+    title = "Histogram of Free Sulfur Dioxide",
+    caption = "From UCI Wine Data Set"
+  )+
+  xlab("Free Sulfur Dioxide")
+```
+
 
 ## Method
 
