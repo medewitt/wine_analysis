@@ -12,6 +12,7 @@ load.project()
 #Run all of the analysis
 (filenames <- list.files("src", pattern="*.R", full.names=TRUE))
 
-for( file in 1:length(filenames)){
-  source(filenames[file()])
+for( a in 1:length(filenames)){
+  on.exit(filenames[a])
+  source(paste0(filenames[a]))
 }
