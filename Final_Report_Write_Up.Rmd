@@ -53,6 +53,10 @@ as.data.frame(red_wine_data_factors) %>%
 
 ###Regression
 
+#### Model Selection
+
+####Residual Analysis
+
 ###Classification
 
 ###Comparison of Models
