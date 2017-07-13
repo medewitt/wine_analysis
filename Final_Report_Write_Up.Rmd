@@ -52,12 +52,31 @@ as.data.frame(red_wine_data_factors) %>%
 ## Method
 
 ###Regression
+In order to select the best fit regression model several different modeling methods were tested. These include LEast Squares Regression, Ridge Regression, Lasso Regression, Principle Components Regression and Partial Least Squares Regression. For each of these methods the quality integer was the value that the model was attempting to predict. The data was divided into two sets, a training set to train the model and a testing set for model validation. We will now go deeper in the model generation process for each of these different modeling types and methods.
+
+####Least Squares
+
+####Ridge Regression
+
+####Lasso Regression
+
+####Principle Components Regression
+
+####Partial Least Squares Regression
+
+#### Model Selection
+```{r warning= FALSE, echo = FALSE}
+print(MSE_plot)
+```
+
+
+#### Residual Analysis
+
+###Classification
 
 #### Model Selection
 
-####Residual Analysis
-
-###Classification
+#### Residual Analysis
 
 ###Comparison of Models
 
