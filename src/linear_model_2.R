@@ -42,24 +42,27 @@ predict.regsubsets <- function (object, newdata, id, ...){
 }
 
 k <- 5
-folds <- sample (1:k, nrow(red_wine_data), replace = TRUE)
-cv_error <- matrix(NA, k, 11, dimnames = list(NULL, paste(1:11)))
+folds <- sample (1:k, nrow(red_wine_data_training), replace = TRUE)
+cv_error_train <- matrix(NA, k, 11, dimnames = list(NULL, paste(1:11)))
 
 for (j in 1:k){
-  best_fit <- regsubsets(quality~., data = red_wine_data [folds !=j,],
+  best_fit <- regsubsets(quality~., data = red_wine_data_training [folds !=j,],
                          nvmax = 11)
   for (i in 1:11){
-    pred = predict.regsubsets(best_fit, red_wine_data[folds==j,], id = i)
-    cv_error[j,i] = mean( (red_wine_data$quality[folds==j]-pred)^2)
+    pred <- predict.regsubsets(best_fit, red_wine_data_training[folds==j,], id = i)
+    cv_error_train[j,i] <- mean( (red_wine_data_training$quality[folds==j]-pred)^2)
   }
 }
 
-(mean_cv_errors <- apply(cv_error, 2, mean))
-plot(mean_cv_errors, type = 'b', main = "Best Model Selection", xlab = "# Parameters Considered",
+(mean_cv_errors_train <- apply(cv_error_train, 2, mean))
+plot(mean_cv_errors_train, type = 'b', main = "Best Model Selection", xlab = "# Parameters Considered",
      ylab = "MSE")
-which.min(mean_cv_errors)
+which.min(mean_cv_errors_train)
 
-reg_best <- regsubsets(quality ~., data = red_wine_data, nvmax = 7)
+##Based on the training data set it appears that using 6-10 variablkes results in about the same error.
+#let's use 7
+
+reg_best <- regsubsets(quality ~., data = red_wine_data_training, nvmax = 7)
 coef(reg_best, 7)
 
 variables_to_consider <- names (coef(reg_best,7))[-1]
@@ -68,6 +71,28 @@ variables_paste <- paste("quality", "~", paste(variables_to_consider,
                                                       collapse = "+"))
 summary(reg_best)
 variables_paste
+
+#Now complete analysis for testing error
+k <- 5
+folds <- sample (1:k, nrow(red_wine_data_testing), replace = TRUE)
+cv_error_pred <- matrix(NA, k, 11, dimnames = list(NULL, paste(1:11)))
+
+for (j in 1:k){
+  best_fit <- regsubsets(quality~., data = red_wine_data_testing [folds !=j,],
+                         nvmax = 11)
+  for (i in 1:11){
+    pred <- predict.regsubsets(best_fit, red_wine_data_testing[folds==j,], id = i)
+    cv_error_pred[j,i] <- mean( (red_wine_data_testing$quality[folds==j]-pred)^2)
+  }
+}
+
+(mean_cv_errors_pred <- apply(cv_error_pred, 2, mean))
+
+MSE_lsr <- mean_cv_errors_pred[7]
+
+plot(mean_cv_errors_pred, type = 'b', main = "Best Model Selection", xlab = "# Parameters Considered",
+     ylab = "MSE")
+lines(mean_cv_errors, type = "c")
 
 #Run boostrap
 
