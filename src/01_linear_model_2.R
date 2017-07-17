@@ -92,7 +92,7 @@ MSE_lsr <- mean_cv_errors_pred[7]
 
 plot(mean_cv_errors_pred, type = 'b', main = "Best Model Selection", xlab = "# Parameters Considered",
      ylab = "MSE")
-lines(mean_cv_errors, type = "c")
+lines(mean_cv_errors_pred, type = "c")
 
 #Run boostrap
 
