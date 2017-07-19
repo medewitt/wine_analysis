@@ -56,7 +56,7 @@ as.data.frame(red_wine_data_factors) %>%
 In order to select the best fit regression model several different modeling methods were tested. These include LEast Squares Regression, Ridge Regression, Lasso Regression, Principle Components Regression and Partial Least Squares Regression. For each of these methods the quality integer was the value that the model was attempting to predict. The data was divided into two sets, a training set to train the model and a testing set for model validation. We will now go deeper in the model generation process for each of these different modeling types and methods.
 
 ####Least Squares
-Best subset selection with CV (k-folds) then best subset on training and testing with CV. 
+The least squares regression method that was tested was the best subset selection. The methodology used to determine the best subset model was to first run cross validation on the entire model in order to determine the number of predictors to include in the model. Once this analysis indicated that any added predictor after 7 variables were selected did not increase the accuracy of the model greatly using this cross validated method.  USing this information, the data was divided into the training and testing data sets and a best subset selection method was done on the training data using a 7 predictor maximum.  
 
 #####Residual Analysis
 Here we need to make some plots against of the fit vs predictors and fit vs prediction to cross off that we considered our residuals
