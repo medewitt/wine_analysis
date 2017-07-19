@@ -16,7 +16,13 @@ red_wine_data_index <-red_wine_data%>%
 as.data.frame(red_wine_data_index) %>% 
   melt(id.vars = "id") %>% 
   ggplot(aes(value))+facet_wrap(~variable, scales = "free_x")+geom_histogram()+
-  geom_histogram(binwidth = function(x) 2 * IQR(x) / (length(x)^(1/3)))
+  geom_histogram(binwidth = function(x) 2 * IQR(x) / (length(x)^(1/3)))+
+  labs(
+    title = "Histograms of All Predictors"
+  )+
+  xlab("")
+
+ggsave("graphs/histogram_all_pred.pdf")
 
 #Review the histogram for the total sulfur dioxide
 as.data.frame(red_wine_data_factors) %>% 
