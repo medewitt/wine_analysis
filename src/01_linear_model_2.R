@@ -41,7 +41,7 @@ predict.regsubsets <- function (object, newdata, id, ...){
   mat[,xvars]%*%coefi
 }
 
-k <- 5
+k <- 10
 folds <- sample (1:k, nrow(red_wine_data_training), replace = TRUE)
 cv_error_train <- matrix(NA, k, 11, dimnames = list(NULL, paste(1:11)))
 
@@ -62,8 +62,8 @@ which.min(mean_cv_errors_train)
 ##Based on the training data set it appears that using 6-10 variablkes results in about the same error.
 #let's use 7
 
-reg_best <- regsubsets(quality ~., data = red_wine_data_training, nvmax = 7)
-coef(reg_best, 7)
+reg_best <- regsubsets(quality ~., data = red_wine_data_training, nvmax = 4)
+coef(reg_best, 4)
 
 variables_to_consider <- names (coef(reg_best,7))[-1]
 
@@ -102,6 +102,10 @@ boot_lm <- function (data, index){
                  data = data, subset = index)))
 }
 
+#Plot predicted Model vs Predictors Etc
+
+
+
 boot_lm(red_wine_data, sample(1000, 1000, replace = T))
 
 (lm_boot_output <- boot(red_wine_data, boot_lm, 1000))
@@ -109,3 +113,28 @@ boot_lm(red_wine_data, sample(1000, 1000, replace = T))
 plot(lm_boot_output, index = 4)
 
 ###Now fit model on data to see the testing error
+best_linear_model <- lm(quality ~ volatile_acidity+chlorides+free_sulfur_dioxide+
+                          total_sulfur_dioxide+pH+sulphates+alcohol, 
+                        data = red_wine_data_training)
+library(modelr)
+
+linear_model_grid <- red_wine_data_testing %>% 
+  modelr::add_predictions(best_linear_model) %>% 
+  add_residuals(best_linear_model) %>% 
+  mutate(index = 1:nrow(red_wine_data_testing)) %>% 
+  dplyr::select(volatile_acidity,chlorides,free_sulfur_dioxide,
+         total_sulfur_dioxide,pH, sulphates,alcohol, quality, pred, resid, index)
+
+m_linear <-melt(as.data.frame(linear_model_grid), 
+                id= c("index", "quality", "pred", "resid"))
+
+ggplot(m_linear,aes(x=value, y = resid))+
+  facet_wrap(~variable, scales = "free_x")+
+    geom_point()+
+    geom_smooth()
+
+ggplot(m_linear, aes(x= quality, y = pred))+
+  geom_point()
+
+ggplot(m_linear, aes(x= quality, y = resid))+
+  geom_point()
