@@ -8,6 +8,7 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(ProjectTemplate)
+library(ggfortify)
 load.project()
 
 (filenames <- list.files("src", pattern="*.R", full.names=TRUE))
@@ -46,6 +47,11 @@ as.data.frame(red_wine_data_factors) %>%
     caption = "From UCI Wine Data Set"
   )+
   xlab("Free Sulfur Dioxide")
+```
+As well as the fit of thithat display high studentized residuals and leverage and thus should be considered for removal in the modeling process. These wines are 1080 and 1082.
+```{r echo = false}
+autoplot(fit2)+
+  labs(title = "Total Sulfur Dioxide")
 ```
 
 
