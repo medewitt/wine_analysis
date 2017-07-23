@@ -67,6 +67,8 @@ for (i in 1:100){
                              sum(red_wine_data_testing$classification==knn_value)/dim(red_wine_data_testing)[1])
 }
 
+knn_best_misclassification <-1- knn_classification[knn_classification = which.max(knn_classification)]
+
 #Turn to tibble and add more information
 knn_classification_scale<-as_tibble(knn_classification) %>% 
   mutate(k_nearest = 1:100)
@@ -77,3 +79,4 @@ ggplot(knn_classification_scale, aes(k_nearest, V1))+
   xlab("Number of Nearest Neighbors Used")+
   ylab("Classification Rate (correct classifications)")+
   labs(title = "Normalized, Scaled Values")
+ggsave("knn_classification_rate_vs_neighbours.pdf", path = "graphs/")
