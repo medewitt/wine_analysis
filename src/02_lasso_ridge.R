@@ -1,5 +1,6 @@
 library(pls)
 library(glmnet)
+
 y <- red_wine_data_training$quality
 model_matrix <- model.matrix( quality ~ ., data=red_wine_data_training )
 cv_out <- cv.glmnet( model_matrix, y, alpha=0 )
