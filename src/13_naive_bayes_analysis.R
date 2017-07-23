@@ -16,6 +16,8 @@ naive_bayes_pred <- predict(naive_bayes_model, newdata = red_wine_data_testing)
 #Displaye the confusion matrix
 (naive_bayes_confusion <-as.matrix(table(naive_bayes_pred, red_wine_data_testing$classification)))
 
+naive_bayes_missclass <- mean(naive_bayes_pred != red_wine_data_testing$classification)
+
 #Add the totals to the summary rows/ columns. Good for tables later
 (naive_bayes_confusion<-addmargins(naive_bayes_confusion))
 
