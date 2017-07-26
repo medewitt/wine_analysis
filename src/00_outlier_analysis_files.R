@@ -2,7 +2,7 @@ summary(red_wine_data_factors)
 
 library(reshape2)
 
-as.data.frame(red_wine_data)%>% 
+as.data.frame(red_wine_data_raw)%>% 
   melt() %>% 
   ggplot(aes(x= variable, y = value))+
   geom_boxplot()+
@@ -10,8 +10,8 @@ as.data.frame(red_wine_data)%>%
 
 #add an index to the data for use with the histograms
 
-red_wine_data_index <-red_wine_data%>% 
-  mutate(id = seq.int(nrow(red_wine_data)))
+red_wine_data_index <-red_wine_data_raw%>% 
+  mutate(id = seq.int(nrow(red_wine_data_raw)))
 
 as.data.frame(red_wine_data_index) %>% 
   melt(id.vars = "id") %>% 
@@ -61,19 +61,19 @@ as.data.frame(red_wine_data_factors) %>%
   xlab("Total Residual Sugar")
 
 ##No clearly present outliers
-ggplot(red_wine_data_factors, aes(x=quality))+
+ggplot(red_wine_data_raw, aes(x=quality))+
   geom_point(aes(y=residual_sugar))
 
-ggplot(red_wine_data_factors, aes(x=quality))+
+ggplot(red_wine_data_raw, aes(x=quality))+
   geom_point(aes(y=free_sulfur_dioxide))
 
 #There are two wines that have very high sulfur dioxide content and have a 7 rating. This could 
 #pull our model the wrong direction, at least for regression if we use total sulfur as a predictor.
 
-ggplot(red_wine_data_factors, aes(x=quality))+
+ggplot(red_wine_data_raw, aes(x=quality))+
   geom_point(aes(y=total_sulfur_dioxide))
 
-ggplot(red_wine_data_factors, aes(y=quality))+
+ggplot(red_wine_data_raw, aes(y=quality))+
   geom_point(aes(x=total_sulfur_dioxide))
 
 

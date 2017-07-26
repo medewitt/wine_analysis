@@ -2,9 +2,6 @@
 
 library(MASS)
 
-red_wine_data_training_fact <- dplyr::select(red_wine_data_training, -quality)
-red_wine_data_testing_fact <- dplyr::select(red_wine_data_testing, -quality)
-
 #create the LDA Model
 lda_model <- lda(formula = classification ~., data = red_wine_data_training_fact, 
                  prior = c(1,1,1)/3, CV = FALSE)

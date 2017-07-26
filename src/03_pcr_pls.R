@@ -15,7 +15,7 @@ PCR_pred <- predict( pcr_fit, red_wine_data_testing, ncomp=ncomps )
 
 #PLS Regression
 
-pls_fit <- plsr( quality ~ ., data = red_wine_data, subset = train_rows, 
+pls_fit <- plsr( quality ~ ., data = red_wine_data_raw, subset = train_rows, 
                  scale=TRUE, validation="CV" )
 
 summary(pls_fit)

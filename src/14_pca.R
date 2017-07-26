@@ -1,7 +1,7 @@
 #Purpose: Run principle component analysis and 
 #         see if we can reduce the dimensionality in the dataset
 
-pca_red_wine<- red_wine_data %>%
+pca_red_wine<- red_wine_data_raw %>%
   dplyr::select(-quality) %>% 
   as.data.frame() %>% 
   na.omit()

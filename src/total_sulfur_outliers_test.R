@@ -1,10 +1,10 @@
 
 
-which.max(red_wine_data$total_sulfur_dioxide)
+which.max(red_wine_data_raw$total_sulfur_dioxide)
 
-red_wine_data_no_outliers <-red_wine_data[-1082,]
+red_wine_data_no_outliers <-red_wine_data_raw[-1082,]
 which.max(red_wine_data_no_outliers$total_sulfur_dioxide)
-red_wine_data_no_outliers <-red_wine_data[-1080,]
+red_wine_data_no_outliers <-red_wine_data_raw[-1080,]
 
 k <- 5
 folds <- sample (1:k, nrow(red_wine_data_no_outliers), replace = TRUE)

@@ -5,18 +5,18 @@
 library(e1071)
 
 #Create the naive bayes model for classification using our training data set
-naive_bayes_model <- naiveBayes(classification ~., data = red_wine_data_training)
+naive_bayes_model <- naiveBayes(classification ~., data = red_wine_data_training_fact)
 
 summary(naive_bayes_model)
 
 print(naive_bayes_model)
 
-naive_bayes_pred <- predict(naive_bayes_model, newdata = red_wine_data_testing)
+naive_bayes_pred <- predict(naive_bayes_model, newdata = red_wine_data_testing_fact)
 
 #Displaye the confusion matrix
-(naive_bayes_confusion <-as.matrix(table(naive_bayes_pred, red_wine_data_testing$classification)))
+(naive_bayes_confusion <-as.matrix(table(naive_bayes_pred, red_wine_data_testing_fact$classification)))
 
-naive_bayes_missclass <- mean(naive_bayes_pred != red_wine_data_testing$classification)
+naive_bayes_missclass <- mean(naive_bayes_pred != red_wine_data_testing_fact$classification)
 
 #Add the totals to the summary rows/ columns. Good for tables later
 (naive_bayes_confusion<-addmargins(naive_bayes_confusion))
@@ -30,3 +30,4 @@ naive_bayes_missclass <- mean(naive_bayes_pred != red_wine_data_testing$classifi
 
 (naive_bayes_poor_misclassification <- 
     1- naive_bayes_confusion[3,3]/naive_bayes_confusion[3,4])
+
