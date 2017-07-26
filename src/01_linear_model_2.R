@@ -101,7 +101,13 @@ m_linear <-melt(as.data.frame(linear_model_grid),
 ggplot(m_linear,aes(x=value, y = resid))+
   facet_wrap(~variable, scales = "free_x")+
     geom_point()+
-    geom_smooth()
+    geom_smooth()+
+  labs(
+    title = 'Residuals vs Predictors',
+    caption = "Using Best Subset Regression"
+  )
+
+ggsave("graphs/residual_linear_model.pdf")
 
 ggplot(m_linear, aes(x= quality, y = pred))+
   geom_point()
