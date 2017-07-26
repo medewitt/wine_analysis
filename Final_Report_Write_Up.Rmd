@@ -5,6 +5,8 @@ date: "7/28/2017"
 output: 
   pdf_document: 
     fig_caption: yes
+    fig_height: 4
+    number_sections: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -21,15 +23,15 @@ for( a in 1:length(filenames)){
 }
 ```
 
-## Introduction
+# Introduction
 
 The purpose of this document is to report the proposed statistical models for classification of red wine bases on 11 predictors. The purpose of this analysis is to provide a model to the vinters in order for them to better predict the quality rating for their product.
 
-## Description of Data
-The data set provided is the Wine dataset from UC Irvine. It consists of `r nrow(red_wine_data) ` with a total of `r ncol(red_wine_data) ` predictors. These predictors include the following `r names(red_wine_data)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vinter is interested in judging the wine's quality through objective means rather than todays subjective method of averaging the 1-10 point judgment of tastetesters. The distribution of these different criteria can be seen below:
-```{r echo=FALSE, warning=FALSE}
-red_wine_data_index <-red_wine_data%>% 
-  mutate(id = seq.int(nrow(red_wine_data)))
+# Description of Data
+The data set provided is the Wine dataset from UC Irvine. It consists of `r nrow(red_wine_data_raw) ` with a total of `r ncol(red_wine_data_raw) ` predictors. These predictors include the following `r names(red_wine_data_raw)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vinter is interested in judging the wine's quality through objective means rather than todays subjective method of averaging the 1-10 point judgment of tastetesters. The distribution of these different criteria can be seen below:
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+red_wine_data_index <-red_wine_data_raw%>% 
+  mutate(id = seq.int(nrow(red_wine_data_raw)))
 as.data.frame(red_wine_data_index) %>% 
   melt(id.vars = "id") %>% 
   ggplot(aes(value))+facet_wrap(~variable, scales = "free_x")+geom_histogram()+
@@ -52,52 +54,58 @@ as.data.frame(red_wine_data_factors) %>%
 ```
 As well as the fit of thithat display high studentized residuals and leverage and thus should be considered for removal in the modeling process. These wines are 1080 and 1082.
 
-```{r echo = false}
+```{r echo=FALSE}
 autoplot(fit2)+
   labs(title = "Total Sulfur Dioxide")
 ```
 
 
-## Method
+# Method
 In order to understand the testing error of any of the modeling used the data was divided in testing and training data sets with which to train then models and then test and estimate the testing error. Seventy percent of the raw data was randomly selected and placed in the training set with the remaining 30% used in the testing data set.
 
-###Regression
+##Regression
 
-In order to select the best fit regression model several different modeling methods were tested. These include LEast Squares Regression, Ridge Regression, Lasso Regression, Principle Components Regression and Partial Least Squares Regression. For each of these methods the quality integer was the value that the model was attempting to predict. The data was divided into two sets, a training set to train the model and a testing set for model validation. We will now go deeper in the model generation process for each of these different modeling types and methods.
+In order to select the best fit regression model several different modeling methods were tested. These include Laast Squares Regression, Ridge Regression, Lasso Regression, Principle Components Regression and Partial Least Squares Regression. For each of these methods the quality integer was the value that the model was attempting to predict. The data was divided into two sets, a training set to train the model and a testing set for model validation. We will now go deeper in the model generation process for each of these different modeling types and methods.
 
-####Least Squares
-The least squares regression method that was tested was the best subset selection. The methodology used to determine the best subset model was to first run cross validation on the entire model in order to determine the number of predictors to include in the model. Once this analysis indicated that any added predictor after 7 variables were selected did not increase the accuracy of the model greatly using this cross validated method.  Using this information, the data was divided into the training and testing data sets and a best subset selection method was done on the training data using a 7 predictor maximum.  
+###Least Squares
+The least squares regression method that was tested was the best subset selection. The methodology used to determine the best subset model was to first run cross validation on the training set in order to determine the number of predictors to include in the model. Once this analysis indicated that any added predictor after 3 variables were selected did not increase the accuracy of the model greatly using this cross validated method.  The training data was then used to determined the best subset of the linear model with three predictors. The best subset included:
 
-#####Residual Analysis
+####Residual Analysis
 Here we need to make some plots against of the fit vs predictors and fit vs prediction to cross off that we considered our residuals
 
-####Ridge Regression
+###Ridge Regression
 Ridge regression was performed on the dataset. cross validation was performed on the training data set to determien the optimum lambda for the ridge regression. This lambda was then using in a ridge regression model with the testing dataset.
 
-####Lasso Regression
+###Lasso Regression
+Which variables were eliminated
 
-####Principle Components Regression
+###Principle Components Regression
 Why did we choose the # we did PC
-####Partial Least Squares Regression
+###Partial Least Squares Regression
 
-#### Model Selection
+### Model Selection
 ```{r warning= FALSE, echo = FALSE}
 print(MSE_plot)
 ```
 
 
-#### Residual Analysis
+### Residual Analysis
 
-###Classification
+##Classification
 For classification purposes the wines were segregated in to three different classes. These classes include "good" (quality >7), "medium" (quality between 4 and 7) and "poor"(quality < 4).
 
-#### Model Selection
+### Model Selection
 
-#### Residual Analysis
+### Residual Analysis
 
-###Comparison of Models
+##Comparison of Models
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+print(classification_plot)
+```
 
-##Discussion
 
-##Conclusion
-##Issues
+#Discussion
+
+#Conclusion
+
+#Issues
