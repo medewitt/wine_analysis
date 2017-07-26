@@ -5,34 +5,17 @@ set.seed(336)
 #Create the full linear model
 (full_lm_model <- lm(as.numeric(red_wine_data_training$quality)~., data = red_wine_data_training))
 
-#Create the stepwise linear regression with both forward and backwards regression
+#First review for collinearity in the figures
 
-(step_model <- step(full_lm_model, direction = "both"))
+cor(red_wine_data_training)
 
-#summary of the model
-summary(step_model)
-
-step_model$anova
-
-##K Folds Cross Validation
-# cv_error<-c()
-# for(i in 1:10){
-#   lm_fit_cv <- glm(quality ~ volatile_acidity + chlorides + free_sulfur_dioxide 
-#                 + total_sulfur_dioxide, data = red_wine_data)
-#   cv_error[i] <- cv.glm( red_wine_data, lm_fit_cv, K= 10)$delta[1]
-# }
-
-#Bootstrap
-# boot_lm <- function (data, index){
-#   return(coef(lm(quality ~ volatile_acidity + chlorides + free_sulfur_dioxide + total_sulfur_dioxide,
-#               data = data, subset = index)))
-# }
-# boot_lm(red_wine_data, sample(100, 100, replace = T))
-# 
-# boot(red_wine_data, boot_lm, 1000)
+#pH, fixed acidity and citric acid all have relatively strong correlatiions. This makes sense as
+#pH is a measure of acidity. Perhaps we should remove pH as a measure as it indirectly measures
+#both fixed acidity and citric acid content.
 
 #Feature selection using model selection and cv
 
+# Create the prediction function to use in cross validation
 predict.regsubsets <- function (object, newdata, id, ...){
   form = as.formula (object$call[[2]])
   mat = model.matrix(form, newdata)
@@ -41,16 +24,20 @@ predict.regsubsets <- function (object, newdata, id, ...){
   mat[,xvars]%*%coefi
 }
 
+red_wine_training_line <- red_wine_data_training %>% 
+  dplyr::select(-pH)
+
+#Complete the K Folds cross validation on the training data set
 k <- 10
-folds <- sample (1:k, nrow(red_wine_data_training), replace = TRUE)
-cv_error_train <- matrix(NA, k, 11, dimnames = list(NULL, paste(1:11)))
+folds <- sample (1:k, nrow(red_wine_training_line), replace = TRUE)
+cv_error_train <- matrix(NA, k, 10, dimnames = list(NULL, paste(1:10)))
 
 for (j in 1:k){
-  best_fit <- regsubsets(quality~., data = red_wine_data_training [folds !=j,],
-                         nvmax = 11)
-  for (i in 1:11){
-    pred <- predict.regsubsets(best_fit, red_wine_data_training[folds==j,], id = i)
-    cv_error_train[j,i] <- mean( (red_wine_data_training$quality[folds==j]-pred)^2)
+  best_fit <- regsubsets(quality~., data = red_wine_training_line [folds !=j,],
+                         nvmax = 10)
+  for (i in 1:10){
+    pred <- predict.regsubsets(best_fit, red_wine_training_line[folds==j,], id = i)
+    cv_error_train[j,i] <- mean( (red_wine_training_line$quality[folds==j]-pred)^2)
   }
 }
 
@@ -59,71 +46,54 @@ plot(mean_cv_errors_train, type = 'b', main = "Best Model Selection", xlab = "# 
      ylab = "MSE")
 which.min(mean_cv_errors_train)
 
-##Based on the training data set it appears that using 6-10 variablkes results in about the same error.
-#let's use 7
+##Based on the training data set it appears that using 3-10 variablkes results in about the same error.
+#let's use 3
 
-reg_best <- regsubsets(quality ~., data = red_wine_data_training, nvmax = 4)
-coef(reg_best, 4)
+reg_best <- regsubsets(quality ~., data = red_wine_data_training, nvmax = 3)
+coef(reg_best, 3)
 
-variables_to_consider <- names (coef(reg_best,7))[-1]
+variables_to_consider <- names (coef(reg_best,3))[-1]
 
 variables_paste <- paste("quality", "~", paste(variables_to_consider, 
                                                       collapse = "+"))
 summary(reg_best)
 variables_paste
 
-#Now complete analysis for testing error
-k <- 5
-folds <- sample (1:k, nrow(red_wine_data_testing), replace = TRUE)
-cv_error_pred <- matrix(NA, k, 11, dimnames = list(NULL, paste(1:11)))
-
-for (j in 1:k){
-  best_fit <- regsubsets(quality~., data = red_wine_data_testing [folds !=j,],
-                         nvmax = 11)
-  for (i in 1:11){
-    pred <- predict.regsubsets(best_fit, red_wine_data_testing[folds==j,], id = i)
-    cv_error_pred[j,i] <- mean( (red_wine_data_testing$quality[folds==j]-pred)^2)
-  }
-}
-
-(mean_cv_errors_pred <- apply(cv_error_pred, 2, mean))
-
-MSE_lsr <- mean_cv_errors_pred[7]
-
-plot(mean_cv_errors_pred, type = 'b', main = "Best Model Selection", xlab = "# Parameters Considered",
-     ylab = "MSE")
-lines(mean_cv_errors_pred, type = "c")
-
 #Run boostrap
 
 boot_lm <- function (data, index){
-  return(coef(lm(quality ~ volatile_acidity+chlorides+free_sulfur_dioxide+
-                   total_sulfur_dioxide+pH+sulphates+alcohol,
+  return(coef(lm(quality ~ volatile_acidity+sulphates+alcohol,
                  data = data, subset = index)))
 }
 
+
+
+
 #Plot predicted Model vs Predictors Etc
 
+boot_lm(red_wine_training_line, sample(1000, 1000, replace = T))
 
+(lm_boot_output <- boot(red_wine_training_line, boot_lm, 1000))
 
-boot_lm(red_wine_data, sample(1000, 1000, replace = T))
-
-(lm_boot_output <- boot(red_wine_data, boot_lm, 1000))
-
-plot(lm_boot_output, index = 4)
+plot(lm_boot_output, index = 3)
 
 ###Now fit model on data to see the testing error
-best_linear_model <- lm(quality ~ volatile_acidity+chlorides+free_sulfur_dioxide+
-                          total_sulfur_dioxide+pH+sulphates+alcohol, 
+best_linear_model <- lm(quality ~ volatile_acidity+sulphates+alcohol, 
                         data = red_wine_data_training)
+
+
+#Calculate mse
+
+MSE_lsr <- mean((red_wine_data_testing$quality -predict(best_linear_model, 
+                                                   newdata = red_wine_data_testing))^2)
+
 library(modelr)
 
 linear_model_grid <- red_wine_data_testing %>% 
   modelr::add_predictions(best_linear_model) %>% 
   add_residuals(best_linear_model) %>% 
   mutate(index = 1:nrow(red_wine_data_testing)) %>% 
-  dplyr::select(volatile_acidity,chlorides,free_sulfur_dioxide,
-         total_sulfur_dioxide,pH, sulphates,alcohol, quality, pred, resid, index)
+  dplyr::select(volatile_acidity, sulphates,alcohol, quality, pred, resid, index)
 
 m_linear <-melt(as.data.frame(linear_model_grid), 
                 id= c("index", "quality", "pred", "resid"))
