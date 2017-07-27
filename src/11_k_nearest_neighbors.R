@@ -48,7 +48,7 @@ ggplot(knn_classification, aes(k_nearest, V1))+
   xlab("Number of Nearest Neighbors Used")+
   ylab("Classification Rate (correct classifications)")+
   labs(
-    title = "Classification Rate, Unscaled, Raw Values"
+    title = "Classification Rate, Unscaled, Clean Values"
   )
 
 ##################################################################################################
