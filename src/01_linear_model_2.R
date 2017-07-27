@@ -1,11 +1,14 @@
 #Purpose: multi-linear regression
 library(boot)
 library(leaps)
+library(caret)
 set.seed(336)
+
 #Create the full linear model
 (full_lm_model <- lm(as.numeric(red_wine_data_training$quality)~., data = red_wine_data_training))
 
 #First review for collinearity in the figures
+
 
 cor(red_wine_data_training)
 
@@ -26,6 +29,8 @@ predict.regsubsets <- function (object, newdata, id, ...){
 
 red_wine_training_line <- red_wine_data_training %>% 
   dplyr::select(-pH)
+
+x<-predict(BoxCoxTrans(red_wine_data_testing$total_sulfur_dioxide), red_wine_data_testing$total_sulfur_dioxide)
 
 #Complete the K Folds cross validation on the training data set
 k <- 10
@@ -54,31 +59,31 @@ coef(reg_best, 3)
 
 variables_to_consider <- names (coef(reg_best,3))[-1]
 
-variables_paste <- paste("quality", "~", paste(variables_to_consider, 
-                                                      collapse = "+"))
+variables_paste <- formula(paste0("quality", "~", paste(variables_to_consider, 
+                                                      collapse = "+")))
 summary(reg_best)
 variables_paste
 
 #Run boostrap
 
-boot_lm <- function (data, index){
-  return(coef(lm(quality ~ volatile_acidity+sulphates+alcohol,
-                 data = data, subset = index)))
-}
+# boot_lm <- function (data, index){
+#   return(coef(lm(variables_paste,
+#                  data = data, subset = index)))
+# }
 
 
 
 
 #Plot predicted Model vs Predictors Etc
-
-boot_lm(red_wine_training_line, sample(1000, 1000, replace = T))
-
-(lm_boot_output <- boot(red_wine_training_line, boot_lm, 1000))
-
-plot(lm_boot_output, index = 3)
+# 
+# boot_lm(red_wine_training_line, sample(1000, 1000, replace = T))
+# 
+# (lm_boot_output <- boot(red_wine_training_line, boot_lm, 1000))
+# 
+# plot(lm_boot_output, index = 3)
 
 ###Now fit model on data to see the testing error
-best_linear_model <- lm(quality ~ volatile_acidity+sulphates+alcohol, 
+best_linear_model <- lm(variables_paste, 
                         data = red_wine_data_training)
 
 
@@ -98,7 +103,7 @@ linear_model_grid <- red_wine_data_testing %>%
 m_linear <-melt(as.data.frame(linear_model_grid), 
                 id= c("index", "quality", "pred", "resid"))
 
-ggplot(m_linear,aes(x=value, y = resid))+
+(linear_resid <- ggplot(m_linear,aes(x=value, y = resid))+
   facet_wrap(~variable, scales = "free_x")+
     geom_point()+
     geom_smooth()+
@@ -106,6 +111,7 @@ ggplot(m_linear,aes(x=value, y = resid))+
     title = 'Residuals vs Predictors',
     caption = "Using Best Subset Regression"
   )
+)
 
 ggsave("graphs/residual_linear_model.pdf")
 
