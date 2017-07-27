@@ -9,5 +9,5 @@ colnames(red_wine_data_raw)<-c("fixed_acidity", "volatile_acidity", "citric_acid
                            "alcohol", "quality")
 red_wine_data_raw <- mutate(red_wine_data_raw, total_sulfur_dioxide = as.numeric(total_sulfur_dioxide))
 
-
+red_wine_data_clean <- red_wine_data_raw[-c(1080, 1082),]
 
