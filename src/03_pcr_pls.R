@@ -7,15 +7,15 @@ pcr_fit <- pcr( quality ~ ., data=red_wine_data_training, scale=TRUE, validation
 validationplot(pcr_fit, val.type = "MSEP")
 
 #Lowest when all components are used
-
-ncomps <- ncol(red_wine_data_testing)-1
-PCR_pred <- predict( pcr_fit, red_wine_data_testing, ncomp=ncomps )
+pcr_fit$loadings
+(ncomps <- ncol(red_wine_data_testing)-1)
+PCR_pred <- predict( pcr_fit, red_wine_data_testing, ncomp=9 )
 (MSE_pcr = mean( ( red_wine_data_testing$quality - PCR_pred )^2 ))
 
 
 #PLS Regression
 
-pls_fit <- plsr( quality ~ ., data = red_wine_data_raw, subset = train_rows, 
+pls_fit <- plsr( quality ~ ., data = red_wine_data_clean, subset = train_rows, 
                  scale=TRUE, validation="CV" )
 
 summary(pls_fit)
