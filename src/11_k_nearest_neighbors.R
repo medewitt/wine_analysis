@@ -37,6 +37,7 @@ for (i in 1:100){
   knn_classification<- rbind(knn_classification,
     sum(red_wine_data_testing_fact$classification==knn_value)/dim(red_wine_data_testing_fact)[1])
 }
+unscaled_neighbours <-which.max(knn_classification)
 
 #Turn to tibble and add more information
 knn_classification<-as_tibble(knn_classification) %>% 
@@ -49,7 +50,8 @@ ggplot(knn_classification, aes(k_nearest, V1))+
   ylab("Classification Rate (correct classifications)")+
   labs(
     title = "Classification Rate, Unscaled, Clean Values"
-  )
+  )+
+  ylim(.7,.9)
 
 ##################################################################################################
 #Normalize the data due to differences in scales
@@ -67,6 +69,8 @@ for (i in 1:100){
                              sum(red_wine_data_testing_fact$classification==knn_value)/dim(red_wine_data_testing_fact)[1])
 }
 
+scaled_knn <- which.max(knn_classification)
+
 knn_best_misclassification <-1- knn_classification[knn_classification = which.max(knn_classification)]
 
 #Turn to tibble and add more information
@@ -78,5 +82,6 @@ ggplot(knn_classification_scale, aes(k_nearest, V1))+
   geom_point(position = "jitter")+
   xlab("Number of Nearest Neighbors Used")+
   ylab("Classification Rate (correct classifications)")+
-  labs(title = "Normalized, Scaled Values")
+  labs(title = "Normalized, Scaled Values")+
+  ylim(.7,.9)
 ggsave("knn_classification_rate_vs_neighbours.pdf", path = "graphs/")
