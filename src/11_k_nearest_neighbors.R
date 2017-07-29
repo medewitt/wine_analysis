@@ -85,3 +85,14 @@ ggplot(knn_classification_scale, aes(k_nearest, V1))+
   labs(title = "Normalized, Scaled Values")+
   ylim(.7,.9)
 ggsave("knn_classification_rate_vs_neighbours.pdf", path = "graphs/")
+
+knn_value <-knn(train = red_wine_data_training_scale, test = red_wine_data_testing_scale, 
+                cl = red_wine_data_training_fact$classification, k = scaled_knn)
+
+(knn_matrix <- table(knn_value,  red_wine_data_testing_fact$classification))
+(knn_good <- (knn_matrix[1,1])/(knn_matrix[1,1]+knn_matrix[2,1]+knn_matrix[3,1]))
+(knn_medium <- (knn_matrix[2,2])/(knn_matrix[1,2]+knn_matrix[2,2]+knn_matrix[3,2]))
+(knn_poor <- (knn_matrix[3,3])/(knn_matrix[1,3]+knn_matrix[2,3]+knn_matrix[3,3]))
+
+knn_accuracy <-cbind(knn_good, knn_medium, knn_poor)
+

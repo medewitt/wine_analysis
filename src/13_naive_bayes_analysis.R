@@ -31,3 +31,8 @@ naive_bayes_missclass <- mean(naive_bayes_pred != red_wine_data_testing_fact$cla
 (naive_bayes_poor_misclassification <- 
     1- naive_bayes_confusion[3,3]/naive_bayes_confusion[3,4])
 
+(bayes_good <- (naive_bayes_confusion[1,1])/(naive_bayes_confusion[1,1]+naive_bayes_confusion[2,1]+naive_bayes_confusion[3,1]))
+(bayes_medium <- (naive_bayes_confusion[2,2])/(naive_bayes_confusion[1,2]+naive_bayes_confusion[2,2]+naive_bayes_confusion[3,2]))
+(bayes_poor <- (naive_bayes_confusion[3,3])/(naive_bayes_confusion[1,3]+naive_bayes_confusion[2,3]+naive_bayes_confusion[3,3]))
+
+bayes_accuracy <-cbind(bayes_good, bayes_medium, bayes_poor)
