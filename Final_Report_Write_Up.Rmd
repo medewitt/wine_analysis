@@ -3,7 +3,8 @@ title: "Final Report for Red Wine Analysis"
 author: "Ruiqiang Chen, Michael DeWitt, David Williams, Alex Vannoy"
 date: "7/28/2017"
 output:
-  pdf_document: default
+  pdf_document: 
+    number_sections: yes
   html_document:
     fig_caption: yes
     fig_height: 4
@@ -109,7 +110,7 @@ print(MSE_plot)
 For classification purposes the wines were segregated in to three different classes. These classes include "good" ($quality >7$), "medium" ($quality between 4 and 7$) and "poor"($quality < 4$). 
 
 ### Model Selection
-Several different classification models were used in this analysis given the new variable added to the data set. The methods used were K-Nearest Neighbours, Linear Discriminate Analysis, Quadratic Discriminate Analysis and tree classification. These different models were trained on the training data set and then applied to the testing dataset to understand the accuracy. It is important to note that greater accuracy was achieved scaling values for the K-Nearest Neighbours approach as this approach using Euclidean distances and thus is sensitive to scale differences.
+Several different classification models were used in this analysis given the new variable added to the data set. The methods used were K-Nearest Neighbours, Linear Discriminate Analysis, Quadratic Discriminate Analysis and tree classification. These different models were trained on the training data set and then applied to the testing dataset to understand the accuracy. It is important to note that greater accuracy was achieved scaling values for the K-Nearest Neighbours approach as this approach using Euclidean distances and thus is sensitive to scale differences. The phenomena can be seen as with the unscaled values the validation algorithm found that `r unscaled_neighbours` were used versus `r scaled_knn`. The larger number of neighbours makes for a much more global model, less sensitive to immediate neighbours in the bias versus variance trade off. 
 
 ##Comparison of Models
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
