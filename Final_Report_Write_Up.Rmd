@@ -90,7 +90,7 @@ Ridge regression was performed on the dataset as well. Cross validation was perf
 Lasso regression was used with cross validation on the data set. Cross validation was used to determine the best lamba which was `r round(bestlam_lasso,3)`. As a function of the lasso regression only pH was shrunk to zero with total sulphur dioxide and free sulphur dioxide being spring to near zero.
 
 ###Principal Components Regression
-Principal compents regression was used. Based on the analysis of the principal components, the first nine principal compnents were used to be trained on the training set. This was done because 90% of the variation couyld be explained by these first nine components. 
+Principal compents regression was used. Based on the analysis of the principal components, the first nine principal compnents were used to be trained on the training set. This was done because 90% of the variation could be explained by these first nine components. 
 
 ###Partial Least Squares Regression
 
@@ -106,11 +106,10 @@ print(MSE_plot)
 ### Residual Analysis
 
 ##Classification
-For classification purposes the wines were segregated in to three different classes. These classes include "good" (quality >7), "medium" (quality between 4 and 7) and "poor"(quality < 4).
+For classification purposes the wines were segregated in to three different classes. These classes include "good" ($quality >7$), "medium" ($quality between 4 and 7$) and "poor"($quality < 4$). 
 
 ### Model Selection
-
-### Residual Analysis
+Several different classification models were used in this analysis given the new variable added to the data set. The methods used were K-Nearest Neighbours, Linear Discriminate Analysis, Quadratic Discriminate Analysis and tree classification. These different models were trained on the training data set and then applied to the testing dataset to understand the accuracy. It is important to note that greater accuracy was achieved scaling values for the K-Nearest Neighbours approach as this approach using Euclidean distances and thus is sensitive to scale differences.
 
 ##Comparison of Models
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
