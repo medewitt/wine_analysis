@@ -44,7 +44,7 @@ knitr::kable(table_to_print, booktabs = TRUE,
 
 The distribution of these different criteria can be seen below in the histograms:
 
-```{r global_histograms, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Histogram of all variables in the data set", fig.asp= .6}
+```{r global_histograms, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Histogram of all variables in the data set", fig.asp= .5}
 red_wine_data_index <-red_wine_data_raw%>% 
   mutate(id = seq.int(nrow(red_wine_data_raw)))
 as.data.frame(red_wine_data_index) %>% 
@@ -55,7 +55,7 @@ as.data.frame(red_wine_data_index) %>%
 
 The following are slightly right skewed: Fixed Acidity, Volatile Acidity, Citric Acid, , Free Sulphur Dioxide, Total Sulphur Dioxide, Sulphates, and Alcohol. Residual Sugar and Chlorides are heavily right skewed with density and pH appearing more normally distributed. Reviewing the individual components there appears to be a slight irregularity with total free sulfur dioxide. This can be seen in the histogram of this variable. 
 
-```{r so2_fig, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Histogram of Sulfur Dioxide Predictor", fig.asp= 0.6}
+```{r so2_fig, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Histogram of Sulfur Dioxide Predictor", fig.asp= 0.5}
 as.data.frame(red_wine_data_factors) %>% 
   melt() %>%
   filter(variable == "free_sulfur_dioxide") %>% 
@@ -70,7 +70,7 @@ as.data.frame(red_wine_data_factors) %>%
 
 As well as the fit of thithat display high studentized residuals and leverage and thus should be considered for removal in the modeling process. These wines are 1080 and 1082.
 
-```{r so2_resid, echo=FALSE, warnings = FALSE, fig.cap="Residual Plots of Linear Model Predicting Quality with Total Sulfur Dioxide ", fig.asp= .6}
+```{r so2_resid, echo=FALSE, warnings = FALSE, fig.cap="Residual Plots of Linear Model Predicting Quality with Total Sulfur Dioxide ", fig.asp= .5}
 so2_resid <-autoplot(fit2)+
   labs(title = "Total Sulfur Dioxide")
 print(so2_resid)
@@ -90,7 +90,7 @@ The least squares regression method that was tested was the best subset selectio
 #### Residual Analysis
 Here we need to make some plots against of the fit vs predictors and fit vs prediction to cross off that we considered our residuals
 
-```{r residuals, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Plot of Residuals from Linear Regression", fig.asp= .6}
+```{r residuals, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Plot of Residuals from Linear Regression", fig.asp= .5}
 
 print(linear_resid)
 ```
@@ -113,7 +113,7 @@ This was used. Difference is that it uses quality response as supervision over t
 Boosted regression also used.
 
 ### Model Selection
-```{r mse_results, warning= FALSE, echo = FALSE, fig.asp= .6, fig.cap="Plot of Results of Different Regression Techniques"}
+```{r mse_results, warning= FALSE, echo = FALSE, fig.asp= .5, fig.cap="Plot of Results of Different Regression Techniques"}
 print(MSE_plot)
 ```
 
@@ -127,8 +127,17 @@ For classification purposes the wines were segregated in to three different clas
 Several different classification models were used in this analysis given the new variable added to the data set. The methods used were K-Nearest Neighbours, Linear Discriminate Analysis, Quadratic Discriminate Analysis and tree classification. These different models were trained on the training data set and then applied to the testing dataset to understand the accuracy. It is important to note that greater accuracy was achieved scaling values for the K-Nearest Neighbours approach as this approach using Euclidean distances and thus is sensitive to scale differences. The phenomena can be seen as with the unscaled values the validation algorithm found that `r unscaled_neighbours` were used versus `r scaled_knn`. The larger number of neighbours makes for a much more global model, less sensitive to immediate neighbours in the bias versus variance trade off. 
 
 ## Comparison of Models
-```{r classification_results, echo=FALSE, message=FALSE, warning=FALSE, fig.asp= .6, fig.cap="Plot of Results of Different Classification Techniques"}
+```{r classification_results, echo=FALSE, message=FALSE, warning=FALSE, fig.asp= .5, fig.cap="Plot of Results of Different Classification Techniques"}
 print(classification_plot)
+```
+
+All of these models seek to maximize the global accuracy of the model. More interesting for the vinters is the ability to detect each of the three different classes of the wines.
+
+```{r classification_details, echo=FALSE, message=FALSE, warning=FALSE, fig.asp= .5}
+
+knitr::kable(combined_detailed_classification_by_category, booktabs = TRUE,
+             caption = "Detailed Classification Accuracy")
+
 ```
 
 
