@@ -18,3 +18,15 @@ combined_misclassification<- combined_misclassification %>%
     )+
     geom_label(aes(x= Model, y = Misclassification, label = Misclassification_round ), position = "dodge"))
 ggsave("graphs/misclassification_plot.pdf")
+
+
+#This looks at the classification accuracy by category from the different methods. At the botton of each page there is 
+#a confusion matrix which is used to calculate these values.
+
+combined_detailed_classification_by_category <- as_tibble(rbind(knn_accuracy, bayes_accuracy, lda_accuracy,
+                                                                qda_accuracy, tree_accuracy)) %>% 
+  mutate(Fit_Technique = c("KNN", "Naive Bayes", "LDA", "QDA", "Tree")) %>% 
+  dplyr::select(Fit_Technique, everything())
+
+colnames(combined_detailed_classification_by_category) <- c("Method","Good", "Medium",
+                                                            "Poor")
