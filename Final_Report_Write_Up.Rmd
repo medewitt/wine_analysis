@@ -68,14 +68,14 @@ These two wines have been removed from the clean dataset in order to be better p
 # Method
 In order to understand the testing error of any of the modeling used the data was divided in testing and training data sets with which to train then models and then test and estimate the testing error. Seventy percent of the raw data was randomly selected and placed in the training set with the remaining 30% used in the testing data set.
 
-##Regression
+## Regression
 
 In order to select the best fit regression model several different modeling methods were tested. These include Least Squares Regression, Ridge Regression, Lasso Regression, Principle Components Regression and Partial Least Squares Regression. For each of these methods the quality integer was the value that the model was attempting to predict. The data was divided into two sets, a training set to train the model and a testing set for model validation. We will now go deeper in the model generation process for each of these different modeling types and methods.
 
-###Least Squares
+### Least Squares
 The least squares regression method that was tested was the best subset selection. The methodology used to determine the best subset model was to first run cross validation on the training set in order to determine the number of predictors to include in the model. Once this analysis indicated that any added predictor after four variables were selected did not increase the accuracy of the model greatly using this cross validated method.  The training data was then used to determined the best subset of the linear model with three predictors. The best subset included:
 
-####Residual Analysis
+#### Residual Analysis
 Here we need to make some plots against of the fit vs predictors and fit vs prediction to cross off that we considered our residuals
 
 ```{r, echo = FALSE, warnings= FALSE, message = FALSE}
@@ -84,18 +84,18 @@ print(linear_resid)
 The residuals appear to have no distinct pattern which is a positive sign that there are not lurking relationships that have not been treated by the modeling.
 
 
-###Ridge Regression
+### Ridge Regression
 Ridge regression was performed on the dataset as well. Cross validation was performed on the training data set to determine the optimum value for lambda for the ridge regression. This lambda, `r round(bestlam_ridge,3)` was then using in a ridge regression model with the testing dataset.
 
-###Lasso Regression
+### Lasso Regression
 Lasso regression was used with cross validation on the data set. Cross validation was used to determine the best lamba which was `r round(bestlam_lasso,3)`. As a function of the lasso regression only pH was shrunk to zero with total sulphur dioxide and free sulphur dioxide being spring to near zero.
 
-###Principal Components Regression
+### Principal Components Regression
 Principal compents regression was used. Based on the analysis of the principal components, the first nine principal compnents were used to be trained on the training set. This was done because 90% of the variation could be explained by these first nine components. 
 
-###Partial Least Squares Regression
+### Partial Least Squares Regression
 
-###Boosted Regression
+### Boosted Regression
 
 
 ### Model Selection
