@@ -1,8 +1,8 @@
 #Now Combine all the Test MSE to a single files
 
 
-combined_linear_mse <- as_tibble(rbind(MSE_lsr, MSE_ridge, MSE_lasso, MSE_pcr, MSE_pls)) %>% 
-  mutate(Fit_Technique = c("Least Squares", "Ridge", "Lasso", "PCR", "PLS"))
+combined_linear_mse <- as_tibble(rbind(MSE_lsr, MSE_ridge, MSE_lasso, MSE_pcr, MSE_pls, MSE_boost_reg)) %>% 
+  mutate(Fit_Technique = c("Least Squares", "Ridge", "Lasso", "PCR", "PLS", "Boosted Regression"))
 
 colnames(combined_linear_mse)<-c("MSE", "Model")
 
