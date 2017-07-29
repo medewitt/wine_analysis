@@ -89,6 +89,9 @@ Principal compents regression was used. BAsed on the analysis of the principal c
 
 ###Partial Least Squares Regression
 
+###Boosted Regression
+
+
 ### Model Selection
 ```{r warning= FALSE, echo = FALSE}
 print(MSE_plot)
