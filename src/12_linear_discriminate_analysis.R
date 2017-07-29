@@ -37,8 +37,8 @@ head(pred_lda_model$posterior,3)
 
 (lda_missclass<-mean(pred_lda_model$class!=red_wine_data_testing_fact$classification))
 
-(lda_good <- (lda_table[1,1])/(lda_table[1,1]+lda_table[2,1]+lda_table[3,1]))
-(lda_medium <- (lda_table[2,2])/(lda_table[1,2]+lda_table[2,2]+lda_table[3,2]))
-(lda_poor <- (lda_table[3,3])/(lda_table[1,3]+lda_table[2,3]+lda_table[3,3]))
+(lda_good <- round((lda_table[1,1])/(lda_table[1,1]+lda_table[2,1]+lda_table[3,1]),2))
+(lda_medium <- round((lda_table[2,2])/(lda_table[1,2]+lda_table[2,2]+lda_table[3,2]),2))
+(lda_poor <- round((lda_table[3,3])/(lda_table[1,3]+lda_table[2,3]+lda_table[3,3]),2))
 
 lda_accuracy <-cbind(lda_good, lda_medium, lda_poor)

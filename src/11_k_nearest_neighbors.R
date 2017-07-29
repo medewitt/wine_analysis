@@ -90,9 +90,9 @@ knn_value <-knn(train = red_wine_data_training_scale, test = red_wine_data_testi
                 cl = red_wine_data_training_fact$classification, k = scaled_knn)
 
 (knn_matrix <- table(knn_value,  red_wine_data_testing_fact$classification))
-(knn_good <- (knn_matrix[1,1])/(knn_matrix[1,1]+knn_matrix[2,1]+knn_matrix[3,1]))
-(knn_medium <- (knn_matrix[2,2])/(knn_matrix[1,2]+knn_matrix[2,2]+knn_matrix[3,2]))
-(knn_poor <- (knn_matrix[3,3])/(knn_matrix[1,3]+knn_matrix[2,3]+knn_matrix[3,3]))
+(knn_good <- round((knn_matrix[1,1])/(knn_matrix[1,1]+knn_matrix[2,1]+knn_matrix[3,1]),2))
+(knn_medium <- round((knn_matrix[2,2])/(knn_matrix[1,2]+knn_matrix[2,2]+knn_matrix[3,2]),2))
+(knn_poor <- round((knn_matrix[3,3])/(knn_matrix[1,3]+knn_matrix[2,3]+knn_matrix[3,3]),2))
 
 knn_accuracy <-cbind(knn_good, knn_medium, knn_poor)
 

@@ -24,9 +24,9 @@ wine_preds <- colnames(wine_tree_pred)[apply(wine_tree_pred,1,which.max)]
 
 (tree_table <-table(wine_preds, red_wine_data_testing_fact$classification))
 
-(tree_good <- (tree_table[1,1])/(tree_table[1,1]+tree_table[2,1]))
-(tree_medium <- (tree_table[2,2])/(tree_table[1,2]+tree_table[2,2]))
-# (tree_poor <- (tree_table[3,3])/(tree_table[1,3]+tree_table[2,3])
+(tree_good <- round((tree_table[1,1])/(tree_table[1,1]+tree_table[2,1]),2))
+(tree_medium <- round((tree_table[2,2])/(tree_table[1,2]+tree_table[2,2]),2))
+# (tree_poor <- round((tree_table[3,3])/(tree_table[1,3]+tree_table[2,3]),2))
 
 tree_accuracy <-cbind(tree_good, tree_medium, 0)
 
