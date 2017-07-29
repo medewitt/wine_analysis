@@ -91,9 +91,9 @@ The least squares regression method that was tested was the best subset selectio
 Here we need to make some plots against of the fit vs predictors and fit vs prediction to cross off that we considered our residuals
 
 ```{r residuals, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Plot of Residuals from Linear Regression", fig.asp= .5}
-
 print(linear_resid)
 ```
+
 The residuals appear to have no distinct pattern which is a positive sign that there are not lurking relationships that have not been treated by the modeling.
 
 
