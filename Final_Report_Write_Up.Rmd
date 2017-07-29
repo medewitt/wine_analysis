@@ -2,11 +2,16 @@
 title: "Final Report for Red Wine Analysis"
 author: "Ruiqiang Chen, Michael DeWitt, David Williams, Alex Vannoy"
 date: "7/28/2017"
-output: 
-  pdf_document: 
+output:
+  pdf_document: default
+  html_document:
     fig_caption: yes
     fig_height: 4
     number_sections: yes
+    pandoc_args:
+    - +RTS
+    - -K64m
+    - -RTS
 ---
 
 ```{r setup, include=FALSE}
@@ -85,7 +90,7 @@ Ridge regression was performed on the dataset as well. Cross validation was perf
 Lasso regression was used with cross validation on the data set. Cross validation was used to determine the best lamba which was `r round(bestlam_lasso,3)`. As a function of the lasso regression only pH was shrunk to zero with total sulphur dioxide and free sulphur dioxide being spring to near zero.
 
 ###Principal Components Regression
-Principal compents regression was used. BAsed on the analysis of the principal components, the first nine principal compnents were used to be trained on the training set. This was done because 90% of the variation couyld be explained by these first nine components. 
+Principal compents regression was used. Based on the analysis of the principal components, the first nine principal compnents were used to be trained on the training set. This was done because 90% of the variation couyld be explained by these first nine components. 
 
 ###Partial Least Squares Regression
 
