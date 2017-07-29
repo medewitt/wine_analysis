@@ -34,8 +34,17 @@ for( a in 1:length(filenames)){
 The purpose of this document is to report the proposed statistical models for classification of red wine bases on 11 predictors. The purpose of this analysis is to provide a model to the vinters in order for them to better predict the quality rating for their product. Analysis will be performing using both regression techniques and classification techniques.
 
 # Description of Data
-The data set provided is the Wine dataset from UC Irvine of red vinho verde wine samples, from the north of Portugal [Cortez et al., 2009]. It consists of `r nrow(red_wine_data_raw) ` with a total of `r ncol(red_wine_data_raw) -1` physicochemical predictors and a response variable. These predictors include the following: `r names(red_wine_data_raw)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vinter is interested in judging the wine's quality through objective means rather than todays subjective method of averaging the 1-10 point judgment of tastetesters. The distribution of these different criteria can be seen below:
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+The data set provided is the Wine dataset from UC Irvine of red vinho verde wine samples, from the north of Portugal [Cortez et al., 2009]. It consists of `r nrow(red_wine_data_raw) ` with a total of `r ncol(red_wine_data_raw) -1` physicochemical predictors and a response variable. These predictors include the following: `r names(red_wine_data_raw)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vinter is interested in judging the wine's quality through objective means rather than todays subjective method of averaging the 1-10 point judgment of tastetesters. A summary of these measures as well as the response variable can be seen in \@ref(fig:summary_table). 
+
+```{r summary_table, echo = FALSE}
+knitr::kable(table_to_print, booktabs = TRUE,
+             caption = "Summary Statistics for the Wine Dataset")
+```
+
+
+The distribution of these different criteria can be seen below:
+
+```{r global_histograms, echo=FALSE, warning=FALSE, message=FALSE, fig.subcap= "Global Histogram", fig.asp= .7}
 red_wine_data_index <-red_wine_data_raw%>% 
   mutate(id = seq.int(nrow(red_wine_data_raw)))
 as.data.frame(red_wine_data_index) %>% 
@@ -45,7 +54,7 @@ as.data.frame(red_wine_data_index) %>%
 ```
 
 The following are slightly right skewed: Fixed Acidity, Volatile Acidity, Citric Acid, , Free Sulphur Dioxide, Total Sulphur Dioxide, Sulphates, and Alcohol. Residual Sugar and Chlorides are heavily right skewed with density and pH appearing more normally distributed. Reviewing the individual components there appears to be a slight irregularity with total free sulfur dioxide. This can be seen in the histogram of this variable. 
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.asp= .7}
 as.data.frame(red_wine_data_factors) %>% 
   melt() %>%
   filter(variable == "free_sulfur_dioxide") %>% 
@@ -59,7 +68,7 @@ as.data.frame(red_wine_data_factors) %>%
 ```
 As well as the fit of thithat display high studentized residuals and leverage and thus should be considered for removal in the modeling process. These wines are 1080 and 1082.
 
-```{r echo=FALSE}
+```{r echo=FALSE, fig.asp= .7}
 autoplot(fit2)+
   labs(title = "Total Sulfur Dioxide")
 ```
@@ -100,7 +109,7 @@ This was used. Difference is that it uses quality response as supervision over t
 Boosted regression also used.
 
 ### Model Selection
-```{r warning= FALSE, echo = FALSE}
+```{r warning= FALSE, echo = FALSE, fig.asp= .7}
 print(MSE_plot)
 ```
 
@@ -108,13 +117,13 @@ print(MSE_plot)
 ### Residual Analysis
 
 ## Classification
-For classification purposes the wines were segregated in to three different classes. These classes include "good" ($quality >7$), "medium" ($quality between 4 and 7$) and "poor"($quality < 4$). 
+For classification purposes the wines were segregated in to three different classes. These classes include "good" ($quality >7$), "medium" ($\; quality \; between \; 4 \;and\;  7$) and "poor"($quality < 4$). 
 
 ### Model Selection
 Several different classification models were used in this analysis given the new variable added to the data set. The methods used were K-Nearest Neighbours, Linear Discriminate Analysis, Quadratic Discriminate Analysis and tree classification. These different models were trained on the training data set and then applied to the testing dataset to understand the accuracy. It is important to note that greater accuracy was achieved scaling values for the K-Nearest Neighbours approach as this approach using Euclidean distances and thus is sensitive to scale differences. The phenomena can be seen as with the unscaled values the validation algorithm found that `r unscaled_neighbours` were used versus `r scaled_knn`. The larger number of neighbours makes for a much more global model, less sensitive to immediate neighbours in the bias versus variance trade off. 
 
 ## Comparison of Models
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.asp= .7}
 print(classification_plot)
 ```
 
