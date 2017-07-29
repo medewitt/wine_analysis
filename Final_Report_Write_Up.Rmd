@@ -34,7 +34,7 @@ for( a in 1:length(filenames)){
 The purpose of this document is to report the proposed statistical models for classification of red wine bases on 11 predictors. The purpose of this analysis is to provide a model to the vinters in order for them to better predict the quality rating for their product. Analysis will be performing using both regression techniques and classification techniques.
 
 # Description of Data
-The data set provided is the Wine dataset from UC Irvine. It consists of `r nrow(red_wine_data_raw) ` with a total of `r ncol(red_wine_data_raw) ` predictors. These predictors include the following `r names(red_wine_data_raw)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vinter is interested in judging the wine's quality through objective means rather than todays subjective method of averaging the 1-10 point judgment of tastetesters. The distribution of these different criteria can be seen below:
+The data set provided is the Wine dataset from UC Irvine of red vinho verde wine samples, from the north of Portugal. It consists of `r nrow(red_wine_data_raw) ` with a total of `r ncol(red_wine_data_raw) -1` physicochemical predictors and a response variable. These predictors include the following: `r names(red_wine_data_raw)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vinter is interested in judging the wine's quality through objective means rather than todays subjective method of averaging the 1-10 point judgment of tastetesters. The distribution of these different criteria can be seen below:
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 red_wine_data_index <-red_wine_data_raw%>% 
   mutate(id = seq.int(nrow(red_wine_data_raw)))
@@ -94,9 +94,10 @@ Lasso regression was used with cross validation on the data set. Cross validatio
 Principal compents regression was used. Based on the analysis of the principal components, the first nine principal compnents were used to be trained on the training set. This was done because 90% of the variation could be explained by these first nine components. 
 
 ### Partial Least Squares Regression
+This was used. Difference is that it uses quality response as supervision over the principal components.
 
 ### Boosted Regression
-
+Boosted regression also used.
 
 ### Model Selection
 ```{r warning= FALSE, echo = FALSE}
