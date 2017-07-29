@@ -24,3 +24,4 @@ wine_preds <- colnames(wine_tree_pred)[apply(wine_tree_pred,1,which.max)]
 
 table(wine_preds, red_wine_data_testing_fact$classification)
 
+
