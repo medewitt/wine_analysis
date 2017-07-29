@@ -109,7 +109,7 @@ m_linear <-melt(as.data.frame(linear_model_grid),
     geom_smooth()+
   labs(
     title = 'Residuals vs Predictors',
-    caption = "Using Best Subset Regression"
+    caption = "Using Best Subset Linear Regression"
   )
 )
 
