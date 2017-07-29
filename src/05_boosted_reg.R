@@ -8,7 +8,7 @@ boost_wine <- gbm(quality ~., data = red_wine_data_training, distribution = "gau
 
 #partial dependence plots
 
-par(mfrow = c(2,2))
+par(mfrow = c(1,2))
 plot(boost_wine, i = "alcohol")
 plot(boost_wine, i = "citric_acid")
 
