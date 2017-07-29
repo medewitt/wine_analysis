@@ -45,7 +45,7 @@ as.data.frame(red_wine_data_index) %>%
 ```
 
 The following are slightly right skewed: Fixed Acidity, Volatile Acidity, Citric Acid, , Free Sulphur Dioxide, Total Sulphur Dioxide, Sulphates, and Alcohol. Residual Sugar and Chlorides are heavily right skewed with density and pH appearing more normally distributed. Reviewing the individual components there appears to be a slight irregularity with total free sulfur dioxide. This can be seen in the histogram of this variable. 
-```{r echo=FALSE }
+```{r echo=FALSE, warning=FALSE, message=FALSE}
 as.data.frame(red_wine_data_factors) %>% 
   melt() %>%
   filter(variable == "free_sulfur_dioxide") %>% 
@@ -106,20 +106,20 @@ print(MSE_plot)
 
 ### Residual Analysis
 
-##Classification
+## Classification
 For classification purposes the wines were segregated in to three different classes. These classes include "good" ($quality >7$), "medium" ($quality between 4 and 7$) and "poor"($quality < 4$). 
 
 ### Model Selection
 Several different classification models were used in this analysis given the new variable added to the data set. The methods used were K-Nearest Neighbours, Linear Discriminate Analysis, Quadratic Discriminate Analysis and tree classification. These different models were trained on the training data set and then applied to the testing dataset to understand the accuracy. It is important to note that greater accuracy was achieved scaling values for the K-Nearest Neighbours approach as this approach using Euclidean distances and thus is sensitive to scale differences. The phenomena can be seen as with the unscaled values the validation algorithm found that `r unscaled_neighbours` were used versus `r scaled_knn`. The larger number of neighbours makes for a much more global model, less sensitive to immediate neighbours in the bias versus variance trade off. 
 
-##Comparison of Models
+## Comparison of Models
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 print(classification_plot)
 ```
 
 
-#Discussion
+# Discussion
 
-#Conclusion
+# Conclusion
 
-#Issues
+# Issues
