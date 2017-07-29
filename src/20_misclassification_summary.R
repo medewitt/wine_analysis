@@ -2,8 +2,8 @@
 
 
 combined_misclassification<- as_tibble(rbind(knn_best_misclassification, naive_bayes_missclass
-                                             , lda_missclass, qda_missclassification)) %>% 
-  mutate(Fit_Technique = c("KNN", "Naive Bayes", "LDA", "QDA"))
+                                             , lda_missclass, qda_missclassification, tree_missclassification)) %>% 
+  mutate(Fit_Technique = c("KNN", "Naive Bayes", "LDA", "QDA", "Tree"))
 
 colnames(combined_misclassification)<-c("Misclassification", "Model")
 
