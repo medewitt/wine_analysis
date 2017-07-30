@@ -1,3 +1,4 @@
+(normality_test <- apply(red_wine_data_raw, 2, shapiro.test))
 
 fit1 <-lm(quality ~ free_sulfur_dioxide, data = red_wine_data_raw)
 par(mfrow=c(2,2))
