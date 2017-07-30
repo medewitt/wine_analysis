@@ -2,6 +2,9 @@
 title: "Final Report for Red Wine Analysis"
 author: "Ruiqiang Chen, Michael DeWitt, David Williams, Alex Vannoy"
 date: "7/28/2017"
+header-includes:
+   - \usepackage{amsmath}
+
 output:
   pdf_document: 
     number_sections: yes
@@ -61,21 +64,21 @@ as.data.frame(red_wine_data_factors) %>%
   filter(variable == "free_sulfur_dioxide") %>% 
   ggplot(aes( value))+
   geom_histogram(bins = 30)+
-  labs(
-    title = "Histogram of Free Sulfur Dioxide",
-    caption = "From UCI Wine Data Set"
-  )+
+  # labs(
+  #   title = "Histogram of Free Sulfur Dioxide",
+  #   caption = "From UCI Wine Data Set"
+  # )+
   xlab("Free Sulfur Dioxide")
 ```
 
 As well as the fit of thithat display high studentized residuals and leverage and thus should be considered for removal in the modeling process. These wines are 1080 and 1082.
 
 ```{r so2_resid, echo=FALSE, warnings = FALSE, fig.cap="Residual Plots of Linear Model Predicting Quality with Total Sulfur Dioxide ", fig.asp= .5}
-so2_resid <-autoplot(fit2)+
-  labs(title = "Total Sulfur Dioxide")
+so2_resid <-autoplot(fit2)
 print(so2_resid)
 ```
-These two wines have been removed from the clean dataset in order to be better predictors. The presence of these two wines may result in incorrect or inaccurate predictions. Ass we did not gatehr this dataset, we do not know if this information was incorrectly captured or if these values are real.
+
+These two wines have been removed from the clean dataset in order to be better predictors. The presence of these two wines may result in incorrect or inaccurate predictions. Ass we did not gather this dataset, we do not know if this information was incorrectly captured or if these values are real. However, given the strong indication that these two points are outliers with high leverage it is a good assumption to remove these two points.
 
 # Method
 In order to understand the testing error of any of the modeling used the data was divided in testing and training data sets with which to train then models and then test and estimate the testing error. Seventy percent of the raw data was randomly selected and placed in the training set with the remaining 30% used in the testing data set.
@@ -101,7 +104,7 @@ The residuals appear to have no distinct pattern which is a positive sign that t
 Ridge regression was performed on the dataset as well. Cross validation was performed on the training data set to determine the optimum value for lambda for the ridge regression. This lambda, `r round(bestlam_ridge,3)` was then using in a ridge regression model with the testing dataset.
 
 ### Lasso Regression
-Lasso regression was used with cross validation on the data set. Cross validation was used to determine the best lamba which was `r round(bestlam_lasso,3)`. As a function of the lasso regression only pH was shrunk to zero with total sulphur dioxide and free sulphur dioxide being spring to near zero.
+Lasso regression was used with cross validation on the data set. Cross validation was used to determine the best lamba which was `r round(bestlam_lasso,3)`. As a function of the lasso regression only pH was shrunk to zero with total sulphur dioxide and free sulphur dioxide being shrunk to near zero.
 
 ### Principal Components Regression
 Principal compents regression was used. Based on the analysis of the principal components, the first nine principal compnents were used to be trained on the training set. This was done because 90% of the variation could be explained by these first nine components. 
@@ -110,7 +113,7 @@ Principal compents regression was used. Based on the analysis of the principal c
 This was used. Difference is that it uses quality response as supervision over the principal components.
 
 ### Boosted Regression
-Boosted regression also used.
+Boosted regression also used. The interaction depth was limited to four in order to not overfit the data. The model was trained on 5,000 different trees. 
 
 ### Model Selection
 ```{r mse_results, warning= FALSE, echo = FALSE, fig.asp= .5, fig.cap="Plot of Results of Different Regression Techniques"}
@@ -118,13 +121,13 @@ print(MSE_plot)
 ```
 
 
-### Residual Analysis
+
 
 ## Classification
 For classification purposes the wines were segregated in to three different classes. These classes include "good" ($quality >7$), "medium" ($\; quality \; between \; 4 \;and\;  7$) and "poor"($quality < 4$). 
 
 ### Model Selection
-Several different classification models were used in this analysis given the new variable added to the data set. The methods used were K-Nearest Neighbours, Linear Discriminate Analysis, Quadratic Discriminate Analysis and tree classification. These different models were trained on the training data set and then applied to the testing dataset to understand the accuracy. It is important to note that greater accuracy was achieved scaling values for the K-Nearest Neighbours approach as this approach using Euclidean distances and thus is sensitive to scale differences. The phenomena can be seen as with the unscaled values the validation algorithm found that `r unscaled_neighbours` were used versus `r scaled_knn`. The larger number of neighbours makes for a much more global model, less sensitive to immediate neighbours in the bias versus variance trade off. 
+Several different classification models were used in this analysis given the new variable added to the data set. The methods used were K-Nearest Neighbours, Linear Discriminate Analysis, Quadratic Discriminate Analysis and tree classification. These different models were trained on the training data set and then applied to the testing dataset to understand the accuracy. It is important to note that greater accuracy was achieved scaling values for the K-Nearest Neighbours approach as this approach using Euclidean distances and thus is sensitive to scale differences. The phenomena can be seen as with the unscaled values the validation algorithm found that `r unscaled_neighbours` were used versus `r scaled_knn`. The larger number of neighbours makes for a much more global model, less sensitive to immediate neighbours in the bias versus variance trade off. The tree classification model was trained first through cross validation and then pruned to six leaves in order to reduce the impact of overfitting in the bias variance trade off.
 
 ## Comparison of Models
 ```{r classification_results, echo=FALSE, message=FALSE, warning=FALSE, fig.asp= .5, fig.cap="Plot of Results of Different Classification Techniques"}
@@ -144,5 +147,15 @@ knitr::kable(combined_detailed_classification_by_category, booktabs = TRUE,
 # Discussion
 
 # Conclusion
+This analysis shows that for regression the boosted regression resulted in the highest accuracy of all regression models; however, this accuracy comes at a cost of interpretability. Because the boosted algorithms have little intrepreation this accuracy is more for prediction than inference. IF inference is the goal for the vinter and horticulturalists who seek to understand the properties that make good wines, the model with higher interpretability and the second highest accuracy is the Lasso regression model. While the PLS is more accurate, again it suffers from ease of interpretation. Thus with this in mind, the superior model for inference with high accuracy is characterized by the below equation:
+\begin{equation}
+\begin{aligned}
+quality = 39.37 + 0.0823 * fixed_acidity -0.981 * volatile_acidity -0.405 * citric_acid \\
+-0.013 *residual_sugar -1.075 * chlorides + 0.006 * free_sulfur_dioxide\\
+- 0.002 * total_sulfur_dioxide - 37.09 * density\\
++1.032 * sulphates + 0.256 * alcohol
+\end{aligned}
+\end{equation}
+
 
 # Issues
