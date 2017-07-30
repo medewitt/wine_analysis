@@ -25,3 +25,7 @@ plot(boost_wine, i = "citric_acid")
 yhat_boost <- predict(boost_wine, newdata = red_wine_data_testing, n.trees = 5000)
 
 (MSE_boost_reg <- mean((yhat_boost-red_wine_data_testing$quality)^2))
+
+boost_wine$Terms
+
+print(pretty.gbm.tree(boost_wine))
