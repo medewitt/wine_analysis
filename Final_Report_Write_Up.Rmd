@@ -56,7 +56,7 @@ as.data.frame(red_wine_data_index) %>%
   geom_histogram(binwidth = function(x) 2 * IQR(x) / (length(x)^(1/3)))
 ```
 
-The following are slightly right skewed: Fixed Acidity, Volatile Acidity, Citric Acid, , Free Sulfur Dioxide, Total Sulfur Dioxide, Sulphates, and Alcohol. Residual Sugar and Chlorides are heavily right skewed with density and pH appearing more normally distributed. Reviewing the individual components there appears to be a slight irregularity with total free sulfur dioxide. This can be seen in the histogram of this variable. 
+The following are slightly right skewed: Fixed Acidity, Volatile Acidity, Citric Acid, , Free Sulfur Dioxide, Total Sulfur Dioxide, Sulphates, and Alcohol. Residual Sugar and Chlorides are heavily right skewed with density and pH appearing more normally distributed. Completing a Shapiro Wilke normality test on the components indicates that all are non-normal. Reviewing the individual components there appears to be a slight irregularity with total free sulfur dioxide. This can be seen in the histogram of this variable. 
 
 ```{r so2_fig, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Histogram of Sulfur Dioxide Predictor", fig.asp= 0.5}
 as.data.frame(red_wine_data_factors) %>% 
@@ -106,8 +106,14 @@ Ridge regression was performed on the dataset as well. Cross validation was perf
 ### Lasso Regression
 Lasso regression was used with cross validation on the data set. Cross validation was used to determine the best lambda which was `r round(bestlam_lasso,3)`. As a function of the lasso regression only pH was shrunk to zero with total sulphur dioxide and free sulphur dioxide being shrunk to near zero.
 
+```{r lasso, echo=FALSE, warning=FALSE, message=FALSE, out.width=c('225px', '225px'), fig.align = "center", fig.show = "hold", fig.cap= "Plot of Lambda vs Coefficients for Ridge/Lasso Regression"}
+plot(ridge_mod, xvar = "lambda", label = TRUE, main = "Ridge Regression")
+plot(lasso_mod, xvar = "lambda", label = TRUE, main = "Lasso Regression")
+```
+
+
 ### Principal Components Regression
-Principal components regression was used. Based on the analysis of the principal components, the first nine principal components were used to be trained on the training set. This was done because 90% of the variation could be explained by these first nine components. 
+Principal components regression was used. Based on the analysis of the principal components, the first nine principal components were used to be trained on the training set. This was done because 90% of the variation could be explained by these first nine components. This is graphically displayed in the plot of principal components.
 
 ```{r pcr_fig, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Valdiation Plot for Principal Components Regression", fig.asp= .5}
 pcr_fit <- pcr( quality ~ ., data=red_wine_data_training, scale=TRUE, validation="CV" )
@@ -117,7 +123,7 @@ validationplot(pcr_fit, val.type = "MSEP", main = "Principal Components Regressi
 
 
 ### Partial Least Squares Regression
-This was used. Difference is that it uses quality response as supervision over the principal components.
+This was used. Difference is that it uses quality response as supervision over the principal components. Using this method one can see from the plot of patial least squares components that after roughly 2-3 components, the model accuracy does not increase drastically.
 
 ```{r pls_fig, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Valdiation Plot for Principal Components Regression", fig.asp= .5}
 pls_fit <- plsr( quality ~ ., data = red_wine_data_clean, subset = train_rows, 
@@ -136,12 +142,11 @@ print(boost_reg_plot)
 
 
 ### Model Selection
+The resulting mean squared errors for each regression method were tabulated in order to determine the superior model.
+
 ```{r mse_results, warning= FALSE, echo = FALSE, fig.asp= .5, fig.cap="Plot of Results of Different Regression Techniques"}
 print(MSE_plot)
 ```
-
-
-
 
 ## Classification
 For classification purposes the wines were segregated in to three different classes. These classes include "good" ($quality >7$), "medium" ($\; quality \; between \; 4 \;and\;  7$) and "poor"($quality < 4$). 
