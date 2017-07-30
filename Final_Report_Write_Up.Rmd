@@ -4,6 +4,7 @@ author: "Ruiqiang Chen, Michael DeWitt, David Williams, Alex Vannoy"
 date: "7/28/2017"
 header-includes:
    - \usepackage{amsmath}
+   - \usepackage{float}
 
 output:
   pdf_document:
@@ -19,7 +20,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.pos = "H")
 library(ProjectTemplate)
 library(ggfortify)
 load.project()
@@ -183,7 +184,7 @@ quality = 39.37 + 0.0823 * fixed\;acidity -0.981 * volatile\;acidity -0.405 * ci
 \end{aligned}
 \end{equation}
 
-Thus from equation \ref{lasso_eq} the vintner can examine each of the variables independently and provide some degree of inference regarding the chemical levels that influence the quality of the red wine. For instances one can see that sulfate content appears to have a stronger positive influence on the wine quality while wines with additional residual sugars reduce the quality score. In the hands of the vinter, these relationships can be explored or potentially exploited to produce a higher quality wine more consistently.
+Thus from equation \ref{lasso_eq} the vintner can examine each of the variables independently and provide some degree of inference regarding the chemical levels that influence the quality of the red wine. For instances one can see that sulfate content appears to have a stronger positive influence on the wine quality while wines with additional residual sugars reduce the quality score. In the hands of the vinter, these relationships can be explored or potentially exploited to produce a higher quality wine more consistently. \linebreak
 
 Turning to the classification method, the best overall classification method was Quadratic Discriminate Analysis. This is seen in both the overall accuracy as well in its ability to accurately classify each subcategory. While the other methods have lesser abilities to detect the good and poor quality wines, the QDA method showed the best accuracy in these two fields, which is very important for vintners when it comes to pricing and selling. The penalty of misclassifying a good wine as medium or a poor wine as medium/ good is severe as this may damage the reputation of the winery. From this analysis it is clear that QDA is the superior method for classification of red wines given this dataset.
 
