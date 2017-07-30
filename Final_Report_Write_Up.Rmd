@@ -37,7 +37,7 @@ for( a in 1:length(filenames)){
 The purpose of this document is to report the proposed statistical models for classification of red wine bases on 11 predictors. The purpose of this analysis is to provide a model to the vintners in order for them to better predict the quality rating for their product. Analysis will be performing using both regression techniques and classification techniques.
 
 # Description of Data
-The data set provided is the Wine dataset from UC Irvine of red vinho verde wine samples, from the north of Portugal [Cortez et al., 2009]. It consists of `r nrow(red_wine_data_raw) ` with a total of `r ncol(red_wine_data_raw) -1` physicochemical predictors and a response variable. These predictors include the following: `r names(red_wine_data_raw)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vintner is interested in judging the wine's quality through objective means rather than today's subjective method of averaging the 1-10 point judgment of taste-testers. A summary of these measures as well as the response variable can be seen in Table 1. 
+The data set provided is the Wine dataset from UC Irvine of red _vinho verde_ wine samples, from the north of Portugal [Cortez et al., 2009]. It consists of `r nrow(red_wine_data_raw) ` with a total of `r ncol(red_wine_data_raw) -1` physicochemical predictors and a response variable. These predictors include the following: `r names(red_wine_data_raw)` with the quality feature being associated with the judgement of the individual wine's quality. Quality is the feature of interest for the dataset as the vintner is interested in judging the wine's quality through objective means rather than today's subjective method of averaging the 1-10 point judgment of taste-testers. A summary of these measures as well as the response variable can be seen in Table 1. 
 
 ```{r summary_table, echo = FALSE}
 knitr::kable(table_to_print, booktabs = TRUE,
@@ -45,7 +45,7 @@ knitr::kable(table_to_print, booktabs = TRUE,
 ```
 
 
-The distribution of these different criteria can be seen below in the histograms:
+The distribution of these different criteria can be seen below in the histograms in Figure 1.
 
 ```{r global_histograms, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Histogram of all variables in the data set", fig.asp= .5}
 red_wine_data_index <-red_wine_data_raw%>% 
@@ -163,3 +163,7 @@ Thus from equation \ref{lasso_eq} the vintner can examine each of the properties
 Turning to the classification method, the best overall classification method was Quadratic Discriminate Analysis. This is seen in both the overall accuracy as well in its ability to accurately classify each subcategory. While the other methods had poorer abilities to detect the good and poor wines, the QDA method showed the best accuracy in these two fields, which is very important for vintners when it comes to pricing and selling. The penalty of misclassifying a good wine as medium or a poor wine as medium/ good is severe as this may damage the reputation of the winery. From this analysis it is clear that QDA is the superior method for classification of red wines given this dataset.
 
 # Issues
+
+Outlier filtering
+Colinnearity (some points became clear were related fixed acidity, citric acid, pH. Some methods did better filtering this impact PCR, PLS, Lasso, Ridge, while linear regression suffered a little, but we removed pH as a predictor and that helped.)
+Non-normality -> we could have done some advanced transformations like boxcox, but this would improve model accuracy at the expense of inference.
