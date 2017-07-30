@@ -1,0 +1,429 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Final Report for Red Wine Analysis},
+            pdfauthor={Ruiqiang Chen, Michael DeWitt, David Williams, Alex Vannoy},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{Final Report for Red Wine Analysis}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Ruiqiang Chen, Michael DeWitt, David Williams, Alex Vannoy}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{7/28/2017}
+
+\usepackage{amsmath}
+\usepackage{float}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}\label{introduction}
+
+The purpose of this document is to report the proposed statistical
+models for classification of red wine bases on 11 predictors. The
+purpose of this analysis is to provide a model to the vintners in order
+for them to better predict the quality rating for their product.
+Analysis will be performing using both regression techniques and
+classification techniques.
+
+\section{Description of Data}\label{description-of-data}
+
+The data set provided is the Wine dataset from UC Irvine of red
+\emph{vinho verde} wine samples, from the north of Portugal {[}Cortez et
+al., 2009{]}. It consists of 1599 with a total of 11 physicochemical
+predictors and a response variable. These predictors include the
+following: fixed\_acidity, volatile\_acidity, citric\_acid,
+residual\_sugar, chlorides, free\_sulfur\_dioxide,
+total\_sulfur\_dioxide, density, pH, sulphates, alcohol, quality with
+the quality feature being associated with the judgement of the
+individual wine's quality. Quality is the feature of interest for the
+dataset as the vintner is interested in judging the wine's quality
+through objective means rather than today's subjective method of
+averaging the 1-10 point judgment of taste-testers. A summary of these
+measures as well as the response variable can be seen in Table 1.
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\caption{Summary Statistics for the Wine Dataset}\tabularnewline
+\toprule
+Descriptions & min & median & mean & max\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Descriptions & min & median & mean & max\tabularnewline
+\midrule
+\endhead
+fixed acidity (g(tartaric acid)/dm\^{}3) & 4.60 & 7.90 & 8.32 &
+15.90\tabularnewline
+volatile acidity (g(acetic acid)/dm\^{}3) & 0.12 & 0.52 & 0.53 &
+1.58\tabularnewline
+citric acid (g/dm\^{}3) & 0.00 & 0.26 & 0.27 & 1.00\tabularnewline
+residual sugar (g/dm\^{}3) & 0.90 & 2.20 & 2.54 & 15.50\tabularnewline
+chlorides (g(sodium cloride)/dm\^{}3 & 0.01 & 0.08 & 0.09 &
+0.61\tabularnewline
+free sulfur dioxide (mg/dm\^{}3) & 1.00 & 14.00 & 15.87 &
+72.00\tabularnewline
+total sulfur dioxide (mg/dm\^{}3) & 6.00 & 38.00 & 46.47 &
+289.00\tabularnewline
+density (g/cm\^{}3) & 0.99 & 1.00 & 1.00 & 1.00\tabularnewline
+pH & 2.74 & 3.31 & 3.31 & 4.01\tabularnewline
+sulphates (g(potassium sulphate)/dm3) & 0.33 & 0.62 & 0.66 &
+2.00\tabularnewline
+alcohol (\% vol.) & 8.40 & 10.20 & 10.42 & 14.90\tabularnewline
+quality & 3.00 & 6.00 & 5.64 & 8.00\tabularnewline
+\bottomrule
+\end{longtable}
+
+The distribution of these different criteria can be seen below in the
+histograms in Figure 1.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{Final_Report_Write_Up_files/figure-latex/global_histograms-1.pdf}
+\caption{Histogram of all variables in the data set}
+\end{figure}
+
+The following are slightly right skewed: Fixed Acidity, Volatile
+Acidity, Citric Acid, , Free Sulfur Dioxide, Total Sulfur Dioxide,
+Sulphates, and Alcohol. Residual Sugar and Chlorides are heavily right
+skewed with density and pH appearing more normally distributed.
+Completing a Shapiro Wilke normality test on the components indicates
+that all are non-normal. Reviewing the individual components there
+appears to be a slight irregularity with total free sulfur dioxide. This
+can be seen in the histogram of this variable.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{Final_Report_Write_Up_files/figure-latex/so2_fig-1.pdf}
+\caption{Histogram of Sulfur Dioxide Predictor}
+\end{figure}
+
+As well as the fit of free sulfur dioxide display high studentized
+residuals and leverage and thus should be considered for removal in the
+modeling process. These wines are 1080 and 1082.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{Final_Report_Write_Up_files/figure-latex/so2_resid-1.pdf}
+\caption{Residual Plots of Linear Model Predicting Quality with Total
+Sulfur Dioxide}
+\end{figure}
+
+These two wines have been removed from the clean dataset in order to be
+better predictors. The presence of these two wines may result in
+incorrect or inaccurate predictions. Ass we did not gather this dataset,
+we do not know if this information was incorrectly captured or if these
+values are real. However, given the strong indication that these two
+points are outliers with high leverage it is a good assumption to remove
+these two points.
+
+\section{Method}\label{method}
+
+In order to estimate the test error of any of the generated models, the
+data was divided in testing and training data sets with which to train
+then models and then test and estimate the testing error. Seventy
+percent of the raw data was randomly selected and placed in the training
+set with the remaining thirty percent used as the testing data set.
+
+\subsection{Regression}\label{regression}
+
+In order to select the best fit regression model, several different
+modeling methods were produced. These include Least Squares Regression,
+Ridge Regression, Lasso Regression, Principle Components Regression, and
+Partial Least Squares Regression. The quality integer was the value that
+the model attempts to predict for each of these methods. The data was
+divided into two sets, a training set to train the model and a testing
+set for model validation. We will now go deeper in the model generation
+process for each of these different modeling types and methods.
+
+\subsubsection{Least Squares}\label{least-squares}
+
+The least squares regression method that was tested was the best subset
+selection. The methodology used to determine the best subset model was
+to first run cross-validation on the training set in order to determine
+the best number of predictors to include in the model. This analysis
+indicated that any additional predictor after three variables were
+selected did not increase the accuracy of the model. The training data
+was then used to determine the best subset of the linear model with
+three predictors. The best subset included:
+
+\paragraph{Residual Analysis}\label{residual-analysis}
+
+Here we need to make some plots against of the fit vs predictors and fit
+vs prediction to cross off that we considered our residuals
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{Final_Report_Write_Up_files/figure-latex/residuals-1.pdf}
+\caption{Plot of Residuals from Linear Regression}
+\end{figure}
+
+The residuals appear to have no distinct pattern which is a positive
+sign that there are not lurking relationships that have not been treated
+by the modeling.
+
+\subsubsection{Ridge Regression}\label{ridge-regression}
+
+Ridge regression was performed on the dataset as well. Cross-validation
+was performed on the training data set to determine the optimum value
+for lambda for the ridge regression. This lambda, 0.079 was then used in
+a ridge regression model with the testing dataset. Further, there seems
+to be a very large coefficient with 11 much smaller coefficients.
+
+\subsubsection{Lasso Regression}\label{lasso-regression}
+
+Lasso regression was used with cross-validation on the data set.
+Cross-validation was used to determine the best lambda which was 0.005.
+As a function of the lasso regression only pH was shrunk to zero with
+total sulphur dioxide and free sulphur dioxide being shrunk to near
+zero. Also similar to ridge regression, there appears to be one much
+larger coefficient in relation to the others.
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=225px]{Final_Report_Write_Up_files/figure-latex/lasso-1} \includegraphics[width=225px]{Final_Report_Write_Up_files/figure-latex/lasso-2} 
+
+}
+
+\caption{Plot of Lambda vs Coefficients for Ridge/Lasso Regression}\label{fig:lasso}
+\end{figure}
+
+\subsubsection{Principal Components
+Regression}\label{principal-components-regression}
+
+Principal components regression was used. Based on the analysis of the
+principal components, the first nine principal components were used to
+be trained on the training set. This was done because 90\% of the
+variation could be explained by these first nine components. This is
+graphically displayed in the plot of principal components.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{Final_Report_Write_Up_files/figure-latex/pcr_fig-1.pdf}
+\caption{Variance Explained for Principal Components Regression}
+\end{figure}
+
+\subsubsection{Partial Least Squares
+Regression}\label{partial-least-squares-regression}
+
+Partial least squares regression was used. However, the difference is
+that it uses quality response as supervision over the principal
+components. Using this method one can see from the plot of patial least
+squares components that after roughly 2-3 components, the model accuracy
+does not increase drastically.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{Final_Report_Write_Up_files/figure-latex/pls_fig-1.pdf}
+\caption{Variance Explained for Partial Least Squares Regression}
+\end{figure}
+
+\subsubsection{Boosted Regression}\label{boosted-regression}
+
+Boosted regression was also used. The interaction depth was limited to
+four in order to reduce the likelihood of over-fitting the data. The
+model was trained on 5,000 different trees.
+
+\begin{figure}[H]
+\centering
+\includegraphics{Final_Report_Write_Up_files/figure-latex/boost_importance-1.pdf}
+\caption{Relative Importance from Boosted Regression}
+\end{figure}
+
+\subsubsection{Model Selection}\label{model-selection}
+
+The resulting mean squared errors for each regression method were
+tabulated in order to determine the superior model.
+
+\begin{figure}[H]
+\centering
+\includegraphics{Final_Report_Write_Up_files/figure-latex/mse_results-1.pdf}
+\caption{Plot of Results of Different Regression Techniques}
+\end{figure}
+
+\subsection{Classification}\label{classification}
+
+For classification purposes the wines were segregated in to three
+different classes. These classes include ``good'' (\(quality >7\)),
+``medium'' (\(\; quality \; between \; 4 \;and\; 7\)) and
+``poor''(\(quality < 4\)).
+
+\subsubsection{Model Selection}\label{model-selection-1}
+
+Several different classification models were used in this analysis given
+the new variable added to the data set. The methods used were K-Nearest
+Neighbors, Linear Discriminant Analysis, Quadratic Discriminant
+Analysis, and tree classification. These different models were trained
+on the training data set and then applied to the testing dataset to
+estimate the accuracy. It is important to note that greater accuracy was
+achieved by scaling values for the K-Nearest Neighbors approach as this
+approach uses Euclidean distances and thus is sensitive to scale
+differences. The phenomena can be seen as with the unscaled values the
+validation algorithm found that 17 were used versus 64. The larger
+number of neighbours makes for a much more global model, less sensitive
+to immediate neighbours in the bias versus variance trade off. The tree
+classification model was trained first through cross-validation and then
+pruned to six leaves in order to reduce the impact of over-fitting in
+the bias variance trade off.
+
+\subsection{Comparison of Models}\label{comparison-of-models}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{Final_Report_Write_Up_files/figure-latex/classification_results-1.pdf}
+\caption{Plot of Results of Different Classification Techniques}
+\end{figure}
+
+All of these models seek to maximize the global accuracy of the model.
+More interesting for the vintners is the ability to detect each of the
+three different classes of the wines.
+
+\begin{longtable}[]{@{}lrrr@{}}
+\caption{Detailed Classification Accuracy}\tabularnewline
+\toprule
+Method & Good & Medium & Poor\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Method & Good & Medium & Poor\tabularnewline
+\midrule
+\endhead
+KNN & 0.24 & 0.98 & 0.00\tabularnewline
+Naive Bayes & 0.52 & 0.77 & 0.06\tabularnewline
+LDA & 0.43 & 0.93 & 0.06\tabularnewline
+QDA & 0.61 & 0.90 & 0.89\tabularnewline
+Tree & 0.36 & 0.92 & 0.00\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Discussion}\label{discussion}
+
+stuff to write about \pagebreak
+
+\section{Conclusion}\label{conclusion}
+
+This analysis shows that for regression the boosted regression resulted
+in the highest accuracy of all regression models; however, this accuracy
+comes at a cost of interpretability. Because the boosted algorithms have
+little intrepreation this accuracy is more for prediction than
+inference. If inference is the goal for the vintner and
+horticulturalists who seek to understand the properties that make good
+wines, the model with higher interpretability and the second highest
+accuracy is the Lasso regression model. While the PLS is more accurate,
+again it suffers from ease of interpretation. Thus with this in mind,
+the superior model for inference with high accuracy is characterized by
+the below equation:\linebreak
+
+\begin{equation}
+\begin{aligned}
+\label{lasso_eq}
+quality = 39.37 + 0.0823 * fixed\;acidity -0.981 * volatile\;acidity -0.405 * citric\;acid \\
+-0.013 *residual\;sugar -1.075 * chlorides + 0.006 * free\;sulfur\;dioxide\\
+- 0.002 * total\;sulfur\;dioxide - 37.09 * density +1.032 * sulphates + 0.256 * alcohol
+\end{aligned}
+\end{equation}
+
+Thus from equation \ref{lasso_eq} the vintner can examine each of the
+variables independently and provide some degree of inference regarding
+the chemical levels that influence the quality of the red wine. For
+instances one can see that sulfate content appears to have a stronger
+positive influence on the wine quality while wines with additional
+residual sugars reduce the quality score. In the hands of the vinter,
+these relationships can be explored or potentially exploited to produce
+a higher quality wine more consistently. \linebreak
+
+Turning to the classification method, the best overall classification
+method was Quadratic Discriminate Analysis. This is seen in both the
+overall accuracy as well in its ability to accurately classify each
+subcategory. While the other methods have lesser abilities to detect the
+good and poor quality wines, the QDA method showed the best accuracy in
+these two fields, which is very important for vintners when it comes to
+pricing and selling. The penalty of misclassifying a good wine as medium
+or a poor wine as medium/ good is severe as this may damage the
+reputation of the winery. From this analysis it is clear that QDA is the
+superior method for classification of red wines given this dataset.
+
+\section{Discussion of Issues}\label{discussion-of-issues}
+
+Outlier filtering Colinnearity (some points became clear were related
+fixed acidity, citric acid, pH. Some methods did better filtering this
+impact PCR, PLS, Lasso, Ridge, while linear regression suffered a
+little, but we removed pH as a predictor and that helped.) Non-normality
+-\textgreater{} we could have done some advanced transformations like
+boxcox, but this would improve model accuracy at the expense of
+inference.
+
+
+\end{document}
