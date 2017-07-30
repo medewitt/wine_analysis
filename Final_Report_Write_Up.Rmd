@@ -81,14 +81,14 @@ print(so2_resid)
 These two wines have been removed from the clean dataset in order to be better predictors. The presence of these two wines may result in incorrect or inaccurate predictions. Ass we did not gather this dataset, we do not know if this information was incorrectly captured or if these values are real. However, given the strong indication that these two points are outliers with high leverage it is a good assumption to remove these two points.
 
 # Method
-In order to understand the testing error of any of the modeling used the data was divided in testing and training data sets with which to train then models and then test and estimate the testing error. Seventy percent of the raw data was randomly selected and placed in the training set with the remaining 30% used in the testing data set.
+In order to estimate the test error of any of the generated models, the data was divided in testing and training data sets with which to train then models and then test and estimate the testing error. Seventy percent of the raw data was randomly selected and placed in the training set with the remaining thirty percent used as the testing data set.
 
 ## Regression
 
-In order to select the best fit regression model several different modeling methods were tested. These include Least Squares Regression, Ridge Regression, Lasso Regression, Principle Components Regression and Partial Least Squares Regression. For each of these methods the quality integer was the value that the model was attempting to predict. The data was divided into two sets, a training set to train the model and a testing set for model validation. We will now go deeper in the model generation process for each of these different modeling types and methods.
+In order to select the best fit regression model, several different modeling methods were produced. These include Least Squares Regression, Ridge Regression, Lasso Regression, Principle Components Regression, and Partial Least Squares Regression. The quality integer was the value that the model attempts to predict for each of these methods. The data was divided into two sets, a training set to train the model and a testing set for model validation. We will now go deeper in the model generation process for each of these different modeling types and methods.
 
 ### Least Squares
-The least squares regression method that was tested was the best subset selection. The methodology used to determine the best subset model was to first run cross validation on the training set in order to determine the number of predictors to include in the model. Once this analysis indicated that any added predictor after four variables were selected did not increase the accuracy of the model greatly using this cross validated method.  The training data was then used to determined the best subset of the linear model with three predictors. The best subset included:
+The least squares regression method that was tested was the best subset selection. The methodology used to determine the best subset model was to first run cross-validation on the training set in order to determine the best number of predictors to include in the model. This analysis indicated that any additional predictor after three variables were selected did not increase the accuracy of the model. The training data was then used to determine the best subset of the linear model with three predictors. The best subset included:
 
 #### Residual Analysis
 Here we need to make some plots against of the fit vs predictors and fit vs prediction to cross off that we considered our residuals
@@ -101,10 +101,10 @@ The residuals appear to have no distinct pattern which is a positive sign that t
 
 
 ### Ridge Regression
-Ridge regression was performed on the dataset as well. Cross validation was performed on the training data set to determine the optimum value for lambda for the ridge regression. This lambda, `r round(bestlam_ridge,3)` was then using in a ridge regression model with the testing dataset.
+Ridge regression was performed on the dataset as well. Cross-validation was performed on the training data set to determine the optimum value for lambda for the ridge regression. This lambda, `r round(bestlam_ridge,3)` was then used in a ridge regression model with the testing dataset. Further, there seems to be a very large coefficient with 11 much smaller coefficients.
 
 ### Lasso Regression
-Lasso regression was used with cross validation on the data set. Cross validation was used to determine the best lambda which was `r round(bestlam_lasso,3)`. As a function of the lasso regression only pH was shrunk to zero with total sulphur dioxide and free sulphur dioxide being shrunk to near zero.
+Lasso regression was used with cross-validation on the data set. Cross-validation was used to determine the best lambda which was `r round(bestlam_lasso,3)`. As a function of the lasso regression only pH was shrunk to zero with total sulphur dioxide and free sulphur dioxide being shrunk to near zero. Also similar to ridge regression, there appears to be one much larger coefficient in relation to the others.
 
 ```{r lasso, echo=FALSE, warning=FALSE, message=FALSE, out.width=c('225px', '225px'), fig.align = "center", fig.show = "hold", fig.cap= "Plot of Lambda vs Coefficients for Ridge/Lasso Regression"}
 plot(ridge_mod, xvar = "lambda", label = TRUE, main = "Ridge Regression")
@@ -123,7 +123,7 @@ validationplot(pcr_fit, val.type = "MSEP", main = "Principal Components Regressi
 
 
 ### Partial Least Squares Regression
-This was used. Difference is that it uses quality response as supervision over the principal components. Using this method one can see from the plot of patial least squares components that after roughly 2-3 components, the model accuracy does not increase drastically.
+Partial least squares regression was used. However, the difference is that it uses quality response as supervision over the principal components. Using this method one can see from the plot of patial least squares components that after roughly 2-3 components, the model accuracy does not increase drastically.
 
 ```{r pls_fig, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Valdiation Plot for Principal Components Regression", fig.asp= .5}
 pls_fit <- plsr( quality ~ ., data = red_wine_data_clean, subset = train_rows, 
@@ -134,7 +134,7 @@ validationplot(pls_fit, val.type = "MSEP", main ="Partial Least Squares Regressi
 
 
 ### Boosted Regression
-Boosted regression also used. The interaction depth was limited to four in order to not over-fit the data. The model was trained on 5,000 different trees. 
+Boosted regression was also used. The interaction depth was limited to four in order to reduce the likelihood of over-fitting the data. The model was trained on 5,000 different trees. 
 
 ```{r boost_importance, warning= FALSE, echo = FALSE, fig.asp= .5, fig.cap="Relative Importance from Boosted Regression"}
 print(boost_reg_plot)
@@ -152,7 +152,7 @@ print(MSE_plot)
 For classification purposes the wines were segregated in to three different classes. These classes include "good" ($quality >7$), "medium" ($\; quality \; between \; 4 \;and\;  7$) and "poor"($quality < 4$). 
 
 ### Model Selection
-Several different classification models were used in this analysis given the new variable added to the data set. The methods used were K-Nearest Neighbours, Linear Discriminate Analysis, Quadratic Discriminate Analysis and tree classification. These different models were trained on the training data set and then applied to the testing dataset to understand the accuracy. It is important to note that greater accuracy was achieved scaling values for the K-Nearest Neighbours approach as this approach using Euclidean distances and thus is sensitive to scale differences. The phenomena can be seen as with the unscaled values the validation algorithm found that `r unscaled_neighbours` were used versus `r scaled_knn`. The larger number of neighbours makes for a much more global model, less sensitive to immediate neighbours in the bias versus variance trade off. The tree classification model was trained first through cross validation and then pruned to six leaves in order to reduce the impact of over-fitting in the bias variance trade off.
+Several different classification models were used in this analysis given the new variable added to the data set. The methods used were K-Nearest Neighbors, Linear Discriminant Analysis, Quadratic Discriminant Analysis, and tree classification. These different models were trained on the training data set and then applied to the testing dataset to estimate the accuracy. It is important to note that greater accuracy was achieved by scaling values for the K-Nearest Neighbors approach as this approach uses Euclidean distances and thus is sensitive to scale differences. The phenomena can be seen as with the unscaled values the validation algorithm found that `r unscaled_neighbours` were used versus `r scaled_knn`. The larger number of neighbours makes for a much more global model, less sensitive to immediate neighbours in the bias versus variance trade off. The tree classification model was trained first through cross-validation and then pruned to six leaves in order to reduce the impact of over-fitting in the bias variance trade off.
 
 ## Comparison of Models
 ```{r classification_results, echo=FALSE, message=FALSE, warning=FALSE, fig.asp= .5, fig.cap="Plot of Results of Different Classification Techniques"}
@@ -172,7 +172,7 @@ knitr::kable(combined_detailed_classification_by_category, booktabs = TRUE,
 # Discussion
 
 # Conclusion
-This analysis shows that for regression the boosted regression resulted in the highest accuracy of all regression models; however, this accuracy comes at a cost of interpretability. Because the boosted algorithms have little intrepreation this accuracy is more for prediction than inference. IF inference is the goal for the vintner and horticulturalists who seek to understand the properties that make good wines, the model with higher interpretability and the second highest accuracy is the Lasso regression model. While the PLS is more accurate, again it suffers from ease of interpretation. Thus with this in mind, the superior model for inference with high accuracy is characterized by the below equation:
+This analysis shows that for regression the boosted regression resulted in the highest accuracy of all regression models; however, this accuracy comes at a cost of interpretability. Because the boosted algorithms have little intrepreation this accuracy is more for prediction than inference. If inference is the goal for the vintner and horticulturalists who seek to understand the properties that make good wines, the model with higher interpretability and the second highest accuracy is the Lasso regression model. While the PLS is more accurate, again it suffers from ease of interpretation. Thus with this in mind, the superior model for inference with high accuracy is characterized by the below equation:
 \begin{equation}
 \begin{aligned}
 \label{lasso_eq}
@@ -183,9 +183,9 @@ quality = 39.37 + 0.0823 * fixed\;acidity -0.981 * volatile\;acidity -0.405 * ci
 \end{aligned}
 \end{equation}
 
-Thus from equation \ref{lasso_eq} the vintner can examine each of the properties independently and gather some inference regarding the inputs that influence the quality of the red wine. For instances one can see that Sulfate content appears to have a stronger positive influence on the wine quality while wines with additional residual sugars reduce the quality score. In the hands of the expert these relationships can be explored to produce a higher quality line more consistently.
+Thus from equation \ref{lasso_eq} the vintner can examine each of the variables independently and provide some degree of inference regarding the chemical levels that influence the quality of the red wine. For instances one can see that sulfate content appears to have a stronger positive influence on the wine quality while wines with additional residual sugars reduce the quality score. In the hands of the vinter, these relationships can be explored or potentially exploited to produce a higher quality wine more consistently.
 
-Turning to the classification method, the best overall classification method was Quadratic Discriminate Analysis. This is seen in both the overall accuracy as well in its ability to accurately classify each subcategory. While the other methods had poorer abilities to detect the good and poor wines, the QDA method showed the best accuracy in these two fields, which is very important for vintners when it comes to pricing and selling. The penalty of misclassifying a good wine as medium or a poor wine as medium/ good is severe as this may damage the reputation of the winery. From this analysis it is clear that QDA is the superior method for classification of red wines given this dataset.
+Turning to the classification method, the best overall classification method was Quadratic Discriminate Analysis. This is seen in both the overall accuracy as well in its ability to accurately classify each subcategory. While the other methods have lesser abilities to detect the good and poor quality wines, the QDA method showed the best accuracy in these two fields, which is very important for vintners when it comes to pricing and selling. The penalty of misclassifying a good wine as medium or a poor wine as medium/ good is severe as this may damage the reputation of the winery. From this analysis it is clear that QDA is the superior method for classification of red wines given this dataset.
 
 # Issues
 
