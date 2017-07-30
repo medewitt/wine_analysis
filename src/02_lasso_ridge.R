@@ -8,6 +8,9 @@ cv_out <- cv.glmnet( model_matrix, y, alpha=0 )
 
 ridge_mod <- glmnet( model_matrix, y, alpha=0 )
 
+plot(ridge_mod, xvar="lambda", label=TRUE)
+
+
 #Predict using new test values
 ridge_pred <- predict( ridge_mod, s=bestlam_ridge, newx=model.matrix( quality ~ ., 
                                                                 data=red_wine_data_testing ) )
@@ -22,6 +25,8 @@ cv_out <- cv.glmnet( model_matrix, y, alpha=1 )
 bestlam_lasso <- cv_out$lambda.min
 
 lasso_mod <- glmnet( model_matrix, y, alpha=1 )
+
+plot(lasso_mod, xvar = "lambda", label = TRUE)
 
 lasso_pred <- predict( lasso_mod, s = bestlam_lasso, 
                        newx= model.matrix( quality ~ ., data = red_wine_data_testing ) )
