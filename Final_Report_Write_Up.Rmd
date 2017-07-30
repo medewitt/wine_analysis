@@ -6,7 +6,7 @@ header-includes:
    - \usepackage{amsmath}
 
 output:
-  pdf_document: 
+  pdf_document:
     number_sections: yes
   html_document:
     fig_caption: yes
