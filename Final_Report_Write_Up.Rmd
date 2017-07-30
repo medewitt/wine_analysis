@@ -109,11 +109,31 @@ Lasso regression was used with cross validation on the data set. Cross validatio
 ### Principal Components Regression
 Principal components regression was used. Based on the analysis of the principal components, the first nine principal components were used to be trained on the training set. This was done because 90% of the variation could be explained by these first nine components. 
 
+```{r pcr_fig, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Valdiation Plot for Principal Components Regression", fig.asp= .5}
+pcr_fit <- pcr( quality ~ ., data=red_wine_data_training, scale=TRUE, validation="CV" )
+
+validationplot(pcr_fit, val.type = "MSEP", main = "Principal Components Regression")
+```
+
+
 ### Partial Least Squares Regression
 This was used. Difference is that it uses quality response as supervision over the principal components.
 
+```{r pls_fig, echo=FALSE, warning=FALSE, message=FALSE, fig.cap= "Valdiation Plot for Principal Components Regression", fig.asp= .5}
+pls_fit <- plsr( quality ~ ., data = red_wine_data_clean, subset = train_rows, 
+                 scale=TRUE, validation="CV" )
+
+validationplot(pls_fit, val.type = "MSEP", main ="Partial Least Squares Regression")
+```
+
+
 ### Boosted Regression
 Boosted regression also used. The interaction depth was limited to four in order to not over-fit the data. The model was trained on 5,000 different trees. 
+
+```{r boost_importance, warning= FALSE, echo = FALSE, fig.asp= .5, fig.cap="Relative Importance from Boosted Regression"}
+print(boost_reg_plot)
+```
+
 
 ### Model Selection
 ```{r mse_results, warning= FALSE, echo = FALSE, fig.asp= .5, fig.cap="Plot of Results of Different Regression Techniques"}
