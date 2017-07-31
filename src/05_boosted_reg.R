@@ -28,4 +28,5 @@ yhat_boost <- predict(boost_wine, newdata = red_wine_data_testing, n.trees = 500
 
 boost_wine$Terms
 
-print(pretty.gbm.tree(boost_wine))
+example_boost<-(pretty.gbm.tree(boost_wine))
+

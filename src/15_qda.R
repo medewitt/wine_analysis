@@ -16,4 +16,5 @@ qda_prediction <- predict(qda_fit, newdata = red_wine_data_testing_fact)
 
 qda_accuracy <-cbind(qda_good, qda_medium, qda_poor)
 
-qda_fit$N
+qda_priors <- round(qda_fit$prior,3)
+qda_group_means <-round(qda_fit$means,3)
