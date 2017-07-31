@@ -217,7 +217,8 @@ the best number of predictors to include in the model. This analysis
 indicated that any additional predictor after three variables were
 selected did not increase the accuracy of the model. The training data
 was then used to determine the best subset of the linear model with
-three predictors. The best subset included:
+three predictors. The best subset included: volatile acidity, sulphates,
+and alcohol.
 
 \paragraph{Residual Analysis}\label{residual-analysis}
 
@@ -294,7 +295,8 @@ does not increase drastically.
 
 Boosted regression was also used. The interaction depth was limited to
 four in order to reduce the likelihood of over-fitting the data. The
-model was trained on 5,000 different trees.
+model was trained on 5,000 different trees. We also assumed a Guassian
+distribution
 
 \begin{figure}[H]
 \centering
@@ -370,17 +372,17 @@ Tree & 0.36 & 0.92 & 0.00\tabularnewline
 
 \section{Discussion}\label{discussion}
 
-This analysis shows that for regression the boosted regression resulted
-in the highest accuracy of all regression models; however, this accuracy
+This analysis shows that for regression the boosted model resulted in
+the highest accuracy of all regression models; however, this accuracy
 comes at a cost of interpretability. Because the boosted algorithms have
-little intrepreation this accuracy is more for prediction than
-inference. If inference is the goal for the vintner and
+little intrepretation this accuracy is more beneficial for prediction
+than inference. If inference is the goal for the vintner and
 horticulturalists who seek to understand the properties that make good
 wines, the model with higher interpretability and the second highest
 accuracy is the Lasso regression model. While the PLS is more accurate,
 again it suffers from ease of interpretation. Thus with this in mind,
 the superior model for inference with high accuracy is characterized by
-the below equation:\linebreak
+the below equation:
 
 \begin{equation}
 \begin{aligned}
@@ -390,6 +392,50 @@ quality = 39.37 + 0.0823 * fixed\;acidity -0.981 * volatile\;acidity -0.405 * ci
 - 0.002 * total\;sulfur\;dioxide - 37.09 * density +1.032 * sulphates + 0.256 * alcohol
 \end{aligned}
 \end{equation}
+
+Whereas the best model for prediction is the boosted regression model.
+An example tree is show below:
+
+\begin{longtable}[]{@{}lrrrrrrrr@{}}
+\caption{Example Boosted Regression Tree}\tabularnewline
+\toprule
+& SplitVar & SplitCodePred & LeftNode & RightNode & MissingNode &
+ErrorReduction & Weight & Prediction\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+& SplitVar & SplitCodePred & LeftNode & RightNode & MissingNode &
+ErrorReduction & Weight & Prediction\tabularnewline
+\midrule
+\endhead
+0 & 10 & 10.4500000 & 1 & 5 & 12 & 32.927684 & 240 &
+-0.0000021\tabularnewline
+1 & 9 & 0.6350000 & 2 & 3 & 4 & 9.971645 & 141 &
+-0.0003125\tabularnewline
+2 & -1 & -0.0005283 & -1 & -1 & -1 & 0.000000 & 85 &
+-0.0005283\tabularnewline
+3 & -1 & 0.0000152 & -1 & -1 & -1 & 0.000000 & 56 &
+0.0000152\tabularnewline
+4 & -1 & -0.0003125 & -1 & -1 & -1 & 0.000000 & 141 &
+-0.0003125\tabularnewline
+5 & 7 & 0.9952450 & 6 & 7 & 11 & 11.203147 & 99 &
+0.0004400\tabularnewline
+6 & -1 & 0.0008572 & -1 & -1 & -1 & 0.000000 & 39 &
+0.0008572\tabularnewline
+7 & 5 & 5.5000000 & 8 & 9 & 10 & 10.837500 & 60 &
+0.0001687\tabularnewline
+8 & -1 & -0.0006813 & -1 & -1 & -1 & 0.000000 & 12 &
+-0.0006813\tabularnewline
+9 & -1 & 0.0003812 & -1 & -1 & -1 & 0.000000 & 48 &
+0.0003812\tabularnewline
+10 & -1 & 0.0001687 & -1 & -1 & -1 & 0.000000 & 60 &
+0.0001687\tabularnewline
+11 & -1 & 0.0004400 & -1 & -1 & -1 & 0.000000 & 99 &
+0.0004400\tabularnewline
+12 & -1 & -0.0000021 & -1 & -1 & -1 & 0.000000 & 240 &
+-0.0000021\tabularnewline
+\bottomrule
+\end{longtable}
 
 Thus from equation \ref{lasso_eq} the vintner can examine each of the
 variables independently and provide some degree of inference regarding
@@ -409,17 +455,209 @@ these two fields, which is very important for vintners when it comes to
 pricing and selling. The penalty of misclassifying a good wine as medium
 or a poor wine as medium/ good is severe as this may damage the
 reputation of the winery. From this analysis it is clear that QDA is the
-superior method for classification of red wines given this dataset.
+superior method for classification of red wines given this dataset. The
+priors and group means for the QDA are shown in the preceding figures.
 
-All of the methods for both classification and regression tended to
-indentify similar ``influential predictors.'' Lasso, ridge, PCR, and PLS
-did a superior job at indentifying and treating potential collinearities
-in the predictors. For example acidity, citric acid and pH (which is a
-measurement of acidity) appear to be correlated in the corelation
-matrix. These models were able to minimize the impact of these
-collinearities where the least squares regression was not. This is why
-the decision was made to remve pH from the best subset selection
-predictors.
+\begin{longtable}[]{@{}lr@{}}
+\caption{Priors used in Quadratic Discriminate Analysis}\tabularnewline
+\toprule
+good & 0.140\tabularnewline
+medium & 0.823\tabularnewline
+poor & 0.038\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ccccc@{}}
+\caption{Group Means used in Quadratic Discriminate Analysis (continued
+below)}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+fixed\_acidity\strut
+\end{minipage} & \begin{minipage}[b]{0.21\columnwidth}\centering\strut
+volatile\_acidity\strut
+\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\centering\strut
+citric\_acid\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+residual\_sugar\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+fixed\_acidity\strut
+\end{minipage} & \begin{minipage}[b]{0.21\columnwidth}\centering\strut
+volatile\_acidity\strut
+\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\centering\strut
+citric\_acid\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+residual\_sugar\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{good}\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\centering\strut
+8.56\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering\strut
+0.409\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+0.325\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\centering\strut
+2.592\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{medium}\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\centering\strut
+8.306\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering\strut
+0.527\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+0.263\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\centering\strut
+2.487\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{poor}\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\centering\strut
+7.694\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering\strut
+0.68\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+0.129\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\centering\strut
+3.061\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ccccc@{}}
+\caption{Table continues below}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering\strut
+chlorides\strut
+\end{minipage} & \begin{minipage}[b]{0.24\columnwidth}\centering\strut
+free\_sulfur\_dioxide\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\centering\strut
+total\_sulfur\_dioxide\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+density\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering\strut
+chlorides\strut
+\end{minipage} & \begin{minipage}[b]{0.24\columnwidth}\centering\strut
+free\_sulfur\_dioxide\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\centering\strut
+total\_sulfur\_dioxide\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+density\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{good}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.076\strut
+\end{minipage} & \begin{minipage}[t]{0.24\columnwidth}\centering\strut
+14.88\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
+37.28\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+0.996\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{medium}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.09\strut
+\end{minipage} & \begin{minipage}[t]{0.24\columnwidth}\centering\strut
+16.6\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
+48.43\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+0.997\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{poor}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.072\strut
+\end{minipage} & \begin{minipage}[t]{0.24\columnwidth}\centering\strut
+8.333\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
+26.94\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+0.997\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}cccc@{}}
+\toprule
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+pH\strut
+\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\centering\strut
+sulphates\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+alcohol\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{good}\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+3.307\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+0.749\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+11.48\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{medium}\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+3.304\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+0.655\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+10.25\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{poor}\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+3.379\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+0.539\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+10.31\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+We would also like to address the fact that we have excluded two data
+points from the original data set. These were observations 1080 and
+1082. These data points were excluded due to their being response
+outliers. We know this because their residual to leverage ratio is very
+large. If these points were included, the fitted models would be
+drastically different. For example, the flexible models would likely do
+better whereas the nonflexible models would do more poorly. Furthermore,
+we would also like to point out that several variable are highly
+correlated. For example fixed acidity, citric acid, and pH are all
+highly correlated. This would make sense to many people with a chemical
+background and to some mathematicians in hindsight. For instance pH is a
+measure of acidity. This is likely why Lasso shrinks several variables
+to zero and many more closely to zero. It is also likely why PCR, PLS
+and ridge regression did similar processes while full linear regressions
+suffers greatly.
 
 There were some issues with the dataset. As we used a publically
 available dataset without indentifying details (wine name, winery name,
@@ -439,22 +677,15 @@ As such these transforms were not used for sake of this analysis.
 
 \section{Conclusion}\label{conclusion}
 
-This analysis shows that for regression the boosted regression resulted
-in the highest accuracy of all regression models; however, this accuracy
-comes at a cost of interpretability. Because the boosted algorithms have
-little intrepreation this accuracy is more for prediction than
-inference. If inference is the goal for the vintner and
-horticulturalists who seek to understand the properties that make good
-wines, the model with higher interpretability and the second highest
-accuracy is the Lasso regression model.
-
-Turning to the classification method, the best overall classification
-method was Quadratic Discriminate Analysis. This is seen in both the
-overall accuracy as well in its ability to accurately classify each
-subcategory. The latter is of great importance as it has a much higher
-accuracy of predicting lower order classifications into a higher class.
-This is of critical importance for the reputation (and perhaops costing)
-of these wines.
+The best method for prediction is the boosted regression model. The best
+method for inference is the Lasso regression model. The best method for
+classifying into high, medium, and low quality wine is the quadratic
+discriminant analysis technique. Two data points were found to be
+response outliers and were removed. The distributions of the predictor
+variables do not seem to have a serious effect on the fitted models. The
+highly correlated variables do have an effect on the fit of the models,
+depending on the strengths and weaknesses of the various model fitting
+processes.
 
 
 \end{document}

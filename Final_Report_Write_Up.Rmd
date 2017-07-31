@@ -90,7 +90,7 @@ In order to estimate the test error of any of the generated models, the data was
 In order to select the best fit regression model, several different modeling methods were produced. These include Least Squares Regression, Ridge Regression, Lasso Regression, Principle Components Regression, and Partial Least Squares Regression. The quality integer was the value that the model attempts to predict for each of these methods. The data was divided into two sets, a training set to train the model and a testing set for model validation. We will now go deeper in the model generation process for each of these different modeling types and methods.
 
 ### Least Squares
-The least squares regression method that was tested was the best subset selection. The methodology used to determine the best subset model was to first run cross-validation on the training set in order to determine the best number of predictors to include in the model. This analysis indicated that any additional predictor after three variables were selected did not increase the accuracy of the model. The training data was then used to determine the best subset of the linear model with three predictors. The best subset included:
+The least squares regression method that was tested was the best subset selection. The methodology used to determine the best subset model was to first run cross-validation on the training set in order to determine the best number of predictors to include in the model. This analysis indicated that any additional predictor after three variables were selected did not increase the accuracy of the model. The training data was then used to determine the best subset of the linear model with three predictors. The best subset included: volatile acidity, sulphates, and alcohol.
 
 #### Residual Analysis
 Here we need to make some plots against of the fit vs predictors and fit vs prediction to cross off that we considered our residuals
@@ -136,7 +136,7 @@ plot(cumsum(pls_x), xlab = "Number of Components", ylab = "Cumulative Porportion
 
 
 ### Boosted Regression
-Boosted regression was also used. The interaction depth was limited to four in order to reduce the likelihood of over-fitting the data. The model was trained on 5,000 different trees. 
+Boosted regression was also used. The interaction depth was limited to four in order to reduce the likelihood of over-fitting the data. The model was trained on 5,000 different trees. We also assumed a Guassian distribution
 
 ```{r boost_importance, warning= FALSE, echo = FALSE, fig.asp= .5, fig.cap="Relative Importance from Boosted Regression", fig.pos="H"}
 print(boost_reg_plot)
@@ -171,7 +171,7 @@ knitr::kable(combined_detailed_classification_by_category, booktabs = TRUE,
 ```
 
 # Discussion
-This analysis shows that for regression the boosted regression resulted in the highest accuracy of all regression models; however, this accuracy comes at a cost of interpretability. Because the boosted algorithms have little intrepreation this accuracy is more for prediction than inference. If inference is the goal for the vintner and horticulturalists who seek to understand the properties that make good wines, the model with higher interpretability and the second highest accuracy is the Lasso regression model. While the PLS is more accurate, again it suffers from ease of interpretation. Thus with this in mind, the superior model for inference with high accuracy is characterized by the below equation:\linebreak
+This analysis shows that for regression the boosted model resulted in the highest accuracy of all regression models; however, this accuracy comes at a cost of interpretability. Because the boosted algorithms have little intrepretation this accuracy is more beneficial for prediction than inference. If inference is the goal for the vintner and horticulturalists who seek to understand the properties that make good wines, the model with higher interpretability and the second highest accuracy is the Lasso regression model. While the PLS is more accurate, again it suffers from ease of interpretation. Thus with this in mind, the superior model for inference with high accuracy is characterized by the below equation:
 
 \begin{equation}
 \begin{aligned}
@@ -182,18 +182,39 @@ quality = 39.37 + 0.0823 * fixed\;acidity -0.981 * volatile\;acidity -0.405 * ci
 \end{aligned}
 \end{equation}
 
+Whereas the best model for prediction is the boosted regression model. An example tree is show below:
+
+```{r example_boost, echo=FALSE}
+knitr::kable(example_boost, booktabs = TRUE,
+             caption = "Example Boosted Regression Tree")
+```
+
+
 Thus from equation \ref{lasso_eq} the vintner can examine each of the variables independently and provide some degree of inference regarding the chemical levels that influence the quality of the red wine. For instances one can see that sulfate content appears to have a stronger positive influence on the wine quality while wines with additional residual sugars reduce the quality score. In the hands of the vintner, these relationships can be explored or potentially exploited to produce a higher quality wine more consistently. \linebreak
 
-Turning to the classification method, the best overall classification method was Quadratic Discriminate Analysis. This is seen in both the overall accuracy as well in its ability to accurately classify each subcategory. While the other methods have lesser abilities to detect the good and poor quality wines, the QDA method showed the best accuracy in these two fields, which is very important for vintners when it comes to pricing and selling. The penalty of misclassifying a good wine as medium or a poor wine as medium/ good is severe as this may damage the reputation of the winery. From this analysis it is clear that QDA is the superior method for classification of red wines given this dataset.
+Turning to the classification method, the best overall classification method was Quadratic Discriminate Analysis. This is seen in both the overall accuracy as well in its ability to accurately classify each subcategory. While the other methods have lesser abilities to detect the good and poor quality wines, the QDA method showed the best accuracy in these two fields, which is very important for vintners when it comes to pricing and selling. The penalty of misclassifying a good wine as medium or a poor wine as medium/ good is severe as this may damage the reputation of the winery. From this analysis it is clear that QDA is the superior method for classification of red wines given this dataset. The priors and group means for the QDA are shown in the preceding figures.
 
-All of the methods for both classification and regression tended to indentify similar "influential predictors." Lasso, ridge, PCR, and PLS did a superior job at indentifying and treating potential collinearities in the predictors. For example acidity, citric acid and pH (which is a measurement of acidity) appear to be correlated in the corelation matrix. These models were able to minimize the impact of these collinearities where the least squares regression was not. This is why the decision was made to remve pH from the best subset selection predictors.
+```{r qda_priors, echo = FALSE}
+knitr::kable(qda_priors, booktabs = TRUE,
+             caption = "Priors used in Quadratic Discriminate Analysis")
+```
+
+```{r qda_means, echo = FALSE}
+library(pander)
+pander(qda_group_means, split.table =80, booktabs = TRUE,
+             caption = "Group Means used in Quadratic Discriminate Analysis")
+```
+
+
+We would also like to address the fact that we have excluded two data points from the original data set. These were observations 1080 and 1082. These data points were excluded due to their being response outliers. We know this because their residual to leverage ratio is very large. If these points were included, the fitted models would be drastically different. For example, the flexible models would likely do better whereas the nonflexible models would do more poorly. Furthermore, we would also like to point out that several variable are highly correlated. For example fixed acidity, citric acid, and pH are all highly correlated. This would make sense to many people with a chemical background and to some mathematicians in hindsight. For instance pH is a measure of acidity. This is likely why Lasso shrinks several variables to zero and many more closely to zero. It is also likely why PCR, PLS and ridge regression did similar processes while full linear regressions suffers greatly.
 
 There were some issues with the dataset. As we used a publically available dataset without indentifying details (wine name, winery name, etc) we could not do further analysis into the cause of potential outliers. Had this information been available we could have been more confident with the elimination of outliers and other discrerning information.
 
 The predictors, while loosely normal were not normal as evidence of a Shapiro Wilke test on all the predictors (all p values < 0.01). Log, square root and polynomial transforms were attempted to normalize the data but these transforms did not improve the normality of the predictors. Because of this fact we could have performed an advanced transformation to these values like a Boxcox transform, but this would have made interpretability of the resulting models much more difficult. As such these transforms were not used for sake of this analysis.
 
 #Conclusion
-This analysis shows that for regression the boosted regression resulted in the highest accuracy of all regression models; however, this accuracy comes at a cost of interpretability. Because the boosted algorithms have little intrepreation this accuracy is more for prediction than inference. If inference is the goal for the vintner and horticulturalists who seek to understand the properties that make good wines, the model with higher interpretability and the second highest accuracy is the Lasso regression model.
 
-Turning to the classification method, the best overall classification method was Quadratic Discriminate Analysis. This is seen in both the overall accuracy as well in its ability to accurately classify each subcategory. The latter is of great importance as it has a much higher accuracy of predicting lower order classifications into a higher class. This is of critical importance for the reputation (and perhaops costing) of these wines.
+The best method for prediction is the boosted regression model. The best method for inference is the Lasso regression model. The best method for classifying into high, medium, and low quality wine is the quadratic discriminant analysis technique. Two data points were found to be response outliers and were removed. The distributions of the predictor variables do not seem to have a serious effect on the fitted models. The highly correlated variables do have an effect on the fit of the models, depending on the strengths and weaknesses of the various model fitting processes.
+
+
 
