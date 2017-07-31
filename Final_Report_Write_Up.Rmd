@@ -209,9 +209,13 @@ As discussed, there existed some issues with the dataset. As we used a publicall
 
 The predictors, while loosely normal were not normal as evidence of a Shapiro Wilke test on all the predictors (all p values < 0.01). Log, square root and polynomial transforms were attempted to normalize the data but these transforms did not improve the normality of the predictors. Because of this fact we could have performed an advanced transformation to these values like a Boxcox transform, but this would have made interpretability of the resulting models much more difficult. As such these transforms were not used for sake of this analysis.
 
-#Conclusion
+# Conclusion
 
 The best method for prediction is the boosted regression model. The best method for inference is the Lasso regression model. The best method for classifying into high, medium, and low quality wine is the quadratic discriminant analysis technique. Two data points were found to be response outliers and were removed. The distributions of the predictor variables do not seem to have a serious effect on the fitted models. The highly correlated variables do have an effect on the fit of the models, depending on the strengths and weaknesses of the various model fitting processes.
 
+\pagebreak
 
+# Index
+
+All code is available at the following GitHub location <https://github.com/medewitt/wine_analysis>.
 
